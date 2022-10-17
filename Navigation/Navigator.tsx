@@ -5,7 +5,8 @@ import HomeScreen from './Screens/HomeScreen';
 import AddContactScreen from './Screens/AddContactScreen';
 import ContactDetailsScreen from './Screens/ContactDetailsScreen';
 import SettingsScreen from './Screens/SettingsScreen';
-import EditContactScreen from "./Screens/EditContactScreen";
+import EditContactScreen from './Screens/EditContactScreen';
+import ContactScreen from './Screens/ContactScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { View, Text, StyleSheet } from "react-native";
 
@@ -16,6 +17,7 @@ const AppNavigator = () => {
       <NavigationContainer theme={DarkTheme} >
         <Navigator screenOptions={{headerShown: false}} initialRouteName={"Home"}>
           <Screen name="Home" component={HomeScreen} />
+          <Screen name="Contacts" component={ContactScreen} />
           <Screen name="Settings" component={SettingsScreen} />
           <Screen name="ContactDetails" component={ContactDetailsScreen} />
           <Screen name="AddContactScreen" component={AddContactScreen} />

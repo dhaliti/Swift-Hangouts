@@ -1,18 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  FlatList,
-  Text,
-  View,
-  Pressable,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import SQLite from 'react-native-sqlite-storage';
-
-interface HomeScreenProps {
-  navigation: any;
-}
+import React, { useEffect, useState } from "react";
+import {Text} from 'react-native';
+import SQLite from "react-native-sqlite-storage";
 
 const db = SQLite.openDatabase(
   {
@@ -25,27 +13,14 @@ const db = SQLite.openDatabase(
   },
 );
 
-const HomeScreen = (props: HomeScreenProps) => {
-  const [contacts, setContacts] = useState([]);
+const HomeScreen = ({route, navigation}) => {
 
   let init: any = [];
-
-
-  useEffect(() => {
-    return () => {
-      console.log('AG');
-      getData();
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      createTable();
-    };
-  }, []);
+  const [contacts, setContacts] = useState([]);
 
   function test() {
-    setContacts(init);
+    console.log(init);
+    navigation.navigate('Contacts', {init});
   }
 
   async function getData() {
@@ -54,17 +29,27 @@ const HomeScreen = (props: HomeScreenProps) => {
         for (let i = 0; i < result.rows.length; i++) {
           init = [...init, result.rows.item(i)];
         }
+        console.log('beforeTest');
         test();
-
       });
     });
   }
 
-  async function dropTable() {
-    await db.transaction(async tx => {
-      await tx.executeSql('DROP TABLE Contact');
-    });
-  }
+
+
+  useEffect(() => {
+    return () => {
+      createTable();
+      getData();
+    };
+  }, );
+
+
+/*  useEffect(() => {
+    return () => {
+      createTable();
+    };
+  }, []);*/
 
   async function createTable() {
     await db.transaction(async tx => {
@@ -78,149 +63,9 @@ const HomeScreen = (props: HomeScreenProps) => {
     });
   }
 
-  async function testContact() {
-    await db.transaction(async tx => {
-      console.log('testContact — begining');
-      tx.executeSql(
-        'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("damir", "haliti", "0649815966", "damirhaliti@yahoo.fr")',
-        [],
-        (tx, result) => {
-          console.log('Inserted' + result);
-        },
-      );
-    });
-    props.navigation.navigate('Home');
-  }
 
-  async function testContact2() {
-    await db.transaction(async tx => {
-      console.log('testContact2 — begining');
-      tx.executeSql(
-        'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("maria", "shvetsova", "0123456789", "mariechvetsov@yahoo.fr")',
-        [],
-        (tx, result) => {
-          console.log('Inserted2' + result);
-        },
-      );
-    });
-    props.navigation.navigate('Home');
-  }
 
-  const goToSettings = () => props.navigation.navigate('Settings');
-
-  const addContact = () => props.navigation.navigate('AddContactScreen');
-
-  const Item = ({item}) => (
-    <TouchableOpacity>
-      <Text> {item.name}</Text>
-    </TouchableOpacity>
-  );
-
-  return (
-    <View style={style.general}>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}>
-        <Text style={style.title}>Contacts</Text>
-      </View>
-      <FlatList
-        data={contacts}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={style.listElement}
-            onPress={() => props.navigation.navigate('ContactDetails', item)}>
-            <Text style={style.listText}>
-              {item.name.charAt(0).toUpperCase()}
-              {item.name.slice(1)} {item.surname.charAt(0).toUpperCase()}
-              {item.surname.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-      />
-      {/*<View*/}
-      {/*  style={{*/}
-      {/*    justifyContent: 'flex-end',*/}
-      {/*    alignItems: 'flex-end',*/}
-      {/*  }}>*/}
-      {/*</View>*/}
-      {/*<View style={{bottom: 50, right: 10, zIndex: 500}}>*/}
-        <Pressable style={style.addButton} onPress={addContact}>
-          <Text style={style.plusSign}>+</Text>
-        </Pressable>
-      {/*</View>*/}
-   {/*   <Button title="Go to Settings" onPress={goToSettings} />
-      <Button title={'Test Contact'} onPress={testContact} />
-      <Button title={'Test Contact 2'} onPress={testContact2} />
-      <Button title={'Drop Table'} onPress={dropTable} />*/}
-    </View>
-  );
+  return <Text style={{color: 'white'}}>Home Screen</Text>;
 };
 
-const style = StyleSheet.create({
-  general: {
-    backgroundColor: '#1A1919',
-    flex: 1,
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: 'white',
-    fontFamily: 'GoogleSansMedium',
-  },
-  listElement: {
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'white',
-    marginBottom: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    fontWeight: 'bold',
-    height: 50,
-    alignSelf: 'auto',
-    padding: 10,
-  },
-  listText: {
-    color: 'white',
-    textAlignVertical: 'auto',
-    fontSize: 16,
-    fontWeight: 'light',
-    padding: 5,
-    fontFamily: 'GoogleSans-Medium.ttf',
-  },
-  addButton: {
-    width: 75,
-    height: 75,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 100,
-    backgroundColor: '#00babc',
-    marginRight: 20,
-    shadowOffset: {width: 5, height: 5},
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 20,
-    alignSelf: 'flex-end',
-    bottom: 25,
-    right: 15,
-  //  zIndex: 500,
-    position: 'absolute',
-  },
-  plusSign: {
-    color: 'white',
-    fontSize: 40,
-    alignSelf: 'center',
-    fontWeight: '300',
-    shadowRadius: 20,
-  },
-});
-
 export default HomeScreen;
-function then(
-  arg0: (r: any) => void,
-): SQLite.TransactionErrorCallback | undefined {
-  throw new Error('Function not implemented.');
-}

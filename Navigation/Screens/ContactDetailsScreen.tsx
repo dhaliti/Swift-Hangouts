@@ -1,9 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, Alert, Pressable} from 'react-native';
 
-interface ContactDetailsScreenProps {
-  navigation: any;
-}
 
 //const ContactDetailsScreen = ({route: {params}}) => {
 const ContactDetailsScreen = ({navigation, route}) => {
