@@ -1,0 +1,65 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/FuturaNewBold.otf",
+      "sha1": "c3bdf1caa9508bb21cc37dd82baaf6b0648d02eb"
+    },
+    {
+      "path": "assets/fonts/FuturaNewBoldOblique.otf",
+      "sha1": "874ff794dc3b465a864435d68171df571422461f"
+    },
+    {
+      "path": "assets/fonts/FuturaNewBook.otf",
+      "sha1": "254e380573df2a64c02d501a56e296037848e78a"
+    },
+    {
+      "path": "assets/fonts/FuturaNewBookOblique.otf",
+      "sha1": "584a9870434845bdb425022f714e50dc74fc0f42"
+    },
+    {
+      "path": "assets/fonts/FuturaNewDemi.otf",
+      "sha1": "519cc945bae7ae0fce58a969b2a410117504c8c3"
+    },
+    {
+      "path": "assets/fonts/FuturaNewDemiOblique.otf",
+      "sha1": "f98afb7183e0b9054ff48f32c5adb9ca7e68320f"
+    },
+    {
+      "path": "assets/fonts/FuturaNewExtraBold.otf",
+      "sha1": "72e728a7382c4d1af3d6c78e10a602db20294db1"
+    },
+    {
+      "path": "assets/fonts/FuturaNewExtraBoldOblique.otf",
+      "sha1": "3b59def8d501a7fdf906c7cf9bce5dcab656361b"
+    },
+    {
+      "path": "assets/fonts/FuturaNewHeavy.otf",
+      "sha1": "8037ac397282d766aa2e9b3441ddf48ddbc0a7ba"
+    },
+    {
+      "path": "assets/fonts/FuturaNewHeavyOblique.otf",
+      "sha1": "7d961b4cd4f3579c60d723616d6e46ae09573c93"
+    },
+    {
+      "path": "assets/fonts/FuturaNewLight.otf",
+      "sha1": "22ec11100215446a6dbd62a274d5d13a68aae937"
+    },
+    {
+      "path": "assets/fonts/FuturaNewLightOblique.otf",
+      "sha1": "eea9a7bb4481ae9f8e7385a4c5cf8abe392f7795"
+    },
+    {
+      "path": "assets/fonts/FuturaNewMedium.otf",
+      "sha1": "1d50d9d8980aa93bca3ce85b1f0e4ad777bda835"
+    },
+    {
+      "path": "assets/fonts/FuturaNewMediumOblique.otf",
+      "sha1": "63c9d2c4bf9d9aa039986e0c72463b5587606b4a"
+    },
+    {
+      "path": "assets/fonts/GoogleSans-Medium.ttf",
+      "sha1": "d45d7641ac2473cc19c260ecabf0f76381703ab6"
+    }
+  ]
+}
