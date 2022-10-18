@@ -58,7 +58,35 @@
       "sha1": "63c9d2c4bf9d9aa039986e0c72463b5587606b4a"
     },
     {
-      "path": "assets/fonts/GoogleSans-Medium.ttf",
+      "path": "assets/fonts/FuturaPT-Bold.otf",
+      "sha1": "81a7500c6001c05973e87ef9a9ac92ec6597e246"
+    },
+    {
+      "path": "assets/fonts/FuturaPT-Book.otf",
+      "sha1": "479c8427052645ca585af947da303cddccd6d2f5"
+    },
+    {
+      "path": "assets/fonts/FuturaPT-Demi.otf",
+      "sha1": "f032855520a9fb4612dc0ac943e9f478cdb168b7"
+    },
+    {
+      "path": "assets/fonts/FuturaPT-ExtraBold.otf",
+      "sha1": "5dd94c5865decfe55e70143c01729d5501608d07"
+    },
+    {
+      "path": "assets/fonts/FuturaPT-Heavy.otf",
+      "sha1": "70ddae2619d19e6b5753ea4d1ea6cb2f1d21c818"
+    },
+    {
+      "path": "assets/fonts/FuturaPT-Light.otf",
+      "sha1": "d1617b1efe200a53866be10e71475149c9d1f2a7"
+    },
+    {
+      "path": "assets/fonts/FuturaPT-Medium.otf",
+      "sha1": "f6db36709c5405d9249140e15e8cd0b0cf11acab"
+    },
+    {
+      "path": "assets/fonts/googlesansmedium.ttf",
       "sha1": "d45d7641ac2473cc19c260ecabf0f76381703ab6"
     }
   ]

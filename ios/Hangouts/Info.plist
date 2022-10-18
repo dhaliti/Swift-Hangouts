@@ -67,7 +67,14 @@
 		<string>FuturaNewLightOblique.otf</string>
 		<string>FuturaNewMedium.otf</string>
 		<string>FuturaNewMediumOblique.otf</string>
-		<string>GoogleSans-Medium.ttf</string>
+		<string>googlesansmedium.ttf</string>
+		<string>FuturaPT-Bold.otf</string>
+		<string>FuturaPT-Book.otf</string>
+		<string>FuturaPT-Demi.otf</string>
+		<string>FuturaPT-ExtraBold.otf</string>
+		<string>FuturaPT-Heavy.otf</string>
+		<string>FuturaPT-Light.otf</string>
+		<string>FuturaPT-Medium.otf</string>
 	</array>
 </dict>
 </plist>

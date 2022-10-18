@@ -1,36 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, View, Pressable, Alert } from "react-native";
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Pressable,
+  Alert,
+} from 'react-native';
+import SQLite from 'react-native-sqlite-storage';
+
+const db = SQLite.openDatabase(
+  {
+    name: 'ContactDatabase.db',
+    location: 'default',
+  },
+  () => {},
+  error => {
+    console.log(error);
+  },
+);
 
 const EditContactScreen = ({navigation, route}) => {
-
   const [name, setName] = useState(route.params.name);
   const [surname, setSurname] = useState(route.params.surname);
   const [email, setEmail] = useState(route.params.email);
   const [phonenumber, setPhonenumber] = useState(route.params.phone_number);
 
-  function editContact() {
-
+  async function editContact() {
     if (!name && !surname) {
       Alert.alert('Missing information', 'Please enter a name or a surname');
-    }
-    else if (!phonenumber) {
+    } else if (!phonenumber) {
       Alert.alert('Missing information', 'Phone number is missing');
+    } else {
+      await db.transaction(async tx => {
+        tx.executeSql(
+          'UPDATE Contact SET name="' +
+            name +
+            '", surname="' +
+            surname +
+            '", email="' +
+            email +
+            '", phone_number="' +
+            phonenumber +
+            '" WHERE phone_number="' + phonenumber + '";',
+          [],
+          (tx, result) => {
+            Alert.alert('Confirmation', 'Contact gas been edited');
+            navigation.navigate('Contacts');
+          },
+        );
+      });
     }
-    else {
-      console.log('Edit');
-      console.log(name);
-      console.log(surname);
-      console.log(email);
-      console.log(phonenumber);
-    }
-
-
   }
 
 
   return (
     <View style={style.general}>
-    <Text style={style.title}>Edit Contact</Text>
+      <Text style={style.title}>Edit Contact</Text>
       <TextInput
         style={style.input}
         placeholderTextColor="grey"
@@ -69,7 +95,6 @@ const EditContactScreen = ({navigation, route}) => {
 
 export default EditContactScreen;
 
-
 const style = StyleSheet.create({
   general: {
     backgroundColor: '#1A1919',
@@ -77,14 +102,22 @@ const style = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: 'bold',
     color: 'white',
-    fontFamily: 'GoogleSansMedium',
+    fontFamily: 'FuturaNewBold',
+    textAlign: 'center',
+    padding: 40,
   },
   input: {
     color: 'white',
     backgroundColor: '#202122',
     marginBottom: 5,
+    //height: 50,
+    fontFamily: 'FuturaNewBook',
+    marginLeft: 30,
+    marginRight: 30,
+    padding: 12,
+    paddingLeft: 15,
+    fontSize: 18,
   },
   editButton: {
     alignItems: 'center',
@@ -92,6 +125,7 @@ const style = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
+    marginTop: 20,
     marginLeft: 50,
     marginRight: 50,
     backgroundColor: '#00babc',

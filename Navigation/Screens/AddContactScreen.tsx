@@ -27,23 +27,6 @@ const AddContactScreen = ({navigation}) => {
     db.
   }*/
 
-  let init: any = [];
-
-  function test() {
-    console.log(init);
-    navigation.navigate('Contacts', {init});
-  }
-
-  async function getData() {
-    await db.transaction(async tx => {
-      tx.executeSql('SELECT * FROM Contact', [], (tx, result) => {
-        for (let i = 0; i < result.rows.length; i++) {
-          init = [...init, result.rows.item(i)];
-        }
-        test();
-      });
-    });
-  }
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [phonenumber, setPhonenumber] = useState('');
@@ -58,7 +41,14 @@ const AddContactScreen = ({navigation}) => {
       await db.transaction(async tx => {
         tx.executeSql(
           'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("' +
-            name + '", "' + surname + '", "' + phonenumber + '", "' + email + '")',
+            name +
+            '", "' +
+            surname +
+            '", "' +
+            phonenumber +
+            '", "' +
+            email +
+            '")',
           [],
           (tx, result) => {
             console.log('New contact ' + result);
@@ -66,7 +56,7 @@ const AddContactScreen = ({navigation}) => {
         );
       });
       Alert.alert('New Contact', 'New Contact has been added successfully!');
-      getData();
+      navigation.goBack();
     }
   }
 
@@ -116,13 +106,21 @@ const style = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
     color: 'white',
+    padding: 30,
+    fontFamily: 'FuturaNewBold',
   },
   input: {
     color: 'white',
     backgroundColor: '#202122',
     marginBottom: 5,
+    height: 50,
+    fontFamily: 'FuturaNewMedium',
+    fontSize: 18,
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 10,
+    paddingLeft: 15,
   },
   addButton: {
     alignItems: 'center',
@@ -133,9 +131,13 @@ const style = StyleSheet.create({
     marginLeft: 50,
     marginRight: 50,
     backgroundColor: '#00babc',
+    marginTop: 20,
   },
   textButton: {
     color: 'white',
+    fontFamily: 'FuturaNewBold',
+
+
   },
 });
 

@@ -9,6 +9,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
+import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 const db = SQLite.openDatabase(
   {
@@ -23,29 +25,26 @@ const db = SQLite.openDatabase(
 
 const ContactScreen = ({navigation, route}) => {
   const [contacts, setContacts] = useState([]);
+  const [table, setTable] = useState(false);
+  const isFocused = useIsFocused();
 
-  useEffect(() => {
-    return () => {
-        console.log('ContactScreen');
-        console.log(Object.keys(route.params));
-        setContacts(route.params.init);
-    };
-  }, []);
+  let init: any = [];
 
-
-  /*useEffect(() => {
-    return () => {
+  /*  useFocusEffect(() => {
       console.log('AG');
       getData();
+    return () => {
     };
-  }, []);
-
+  });*/
 
   useEffect(() => {
     return () => {
-      createTable();
+      if (table == false) {
+        createTable();
+      }
+      getData();
     };
-  }, []);
+  }, [isFocused]);
 
   function test() {
     setContacts(init);
@@ -58,10 +57,9 @@ const ContactScreen = ({navigation, route}) => {
           init = [...init, result.rows.item(i)];
         }
         test();
-
       });
     });
-  }*/
+  }
 
   async function dropTable() {
     await db.transaction(async tx => {
@@ -69,17 +67,18 @@ const ContactScreen = ({navigation, route}) => {
     });
   }
 
-  /*  async function createTable() {
+  async function createTable() {
     await db.transaction(async tx => {
       await tx.executeSql(
         'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30), email VARCHAR(30));',
         [],
         (tx, result) => {
           console.log('table ' + result);
+          setTable(true);
         },
       );
     });
-  }*/
+  }
 
   async function testContact() {
     await db.transaction(async tx => {
@@ -113,12 +112,6 @@ const ContactScreen = ({navigation, route}) => {
 
   const addContact = () => navigation.navigate('AddContactScreen');
 
-  const Item = ({item}) => (
-    <TouchableOpacity>
-      <Text> {item.name}</Text>
-    </TouchableOpacity>
-  );
-
   return (
     <View style={style.general}>
       <View
@@ -131,15 +124,25 @@ const ContactScreen = ({navigation, route}) => {
       <FlatList
         data={contacts}
         renderItem={({item}) => (
-          <TouchableOpacity
-            style={style.listElement}
-            onPress={() => navigation.navigate('ContactDetails', item)}>
-            <Text style={style.listText}>
-              {item.name.charAt(0).toUpperCase()}
-              {item.name.slice(1)} {item.surname.charAt(0).toUpperCase()}
-              {item.surname.slice(1)}
-            </Text>
-          </TouchableOpacity>
+
+            <TouchableOpacity
+              style={style.listElement}
+              onPress={() => navigation.navigate('ContactDetails', item)}>
+              <View style={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+              <Text style={style.initials}>
+                {item.name.charAt(0).toUpperCase()}{' '}
+                {item.surname.charAt(0).toUpperCase()}
+              </Text>
+              <Text style={style.listText}>
+                {item.name.charAt(0).toUpperCase()}
+                {item.name.slice(1)} {item.surname.charAt(0).toUpperCase()}
+                {item.surname.slice(1)}
+              </Text>
+              </View>
+            </TouchableOpacity>
         )}
       />
       {/*<View*/}
@@ -158,7 +161,7 @@ const ContactScreen = ({navigation, route}) => {
       <Button title={'Test Contact'} onPress={testContact} />
       <Button title={'Test Contact 2'} onPress={testContact2} />
 */}
-      <Button title={'Drop Table'} onPress={dropTable} />
+      {/*<Button title={'Drop Table'} onPress={dropTable} />*/}
     </View>
   );
 };
@@ -170,9 +173,9 @@ const style = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: 'bold',
     color: 'white',
-    fontFamily: 'GoogleSansMedium',
+    fontFamily: 'FuturaNewBold',
+    padding: 30,
   },
   listElement: {
     borderBottomWidth: 0.5,
@@ -181,17 +184,17 @@ const style = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     fontWeight: 'bold',
-    height: 50,
+    //height: 50,
     alignSelf: 'auto',
-    padding: 10,
+    padding: 12,
   },
   listText: {
     color: 'white',
     textAlignVertical: 'auto',
     fontSize: 16,
-    fontWeight: 'light',
     padding: 5,
-    fontFamily: 'GoogleSans-Medium.ttf',
+    fontFamily: 'FuturaNewMedium',
+    fontSize: 18,
   },
   addButton: {
     width: 75,
@@ -218,6 +221,23 @@ const style = StyleSheet.create({
     alignSelf: 'center',
     fontWeight: '300',
     shadowRadius: 20,
+  },
+  initials: {
+    width: 40,
+    height: 40,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 14,
+    fontFamily: 'FuturaNewBold',
+    borderRadius: 100,
+    color: 'white',
+    borderColor: 'white',
+    borderWidth: 1,
+    // marginTop: 100,
+    // marginBottom: 20,
+    bottom: 5,
+    marginRight: 15,
+ //   left: 10,
   },
 });
 

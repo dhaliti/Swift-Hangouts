@@ -23,6 +23,7 @@ const HomeScreen = ({route, navigation}) => {
     navigation.navigate('Contacts', {init});
   }
 
+
   async function getData() {
     await db.transaction(async tx => {
       tx.executeSql('SELECT * FROM Contact', [], (tx, result) => {
@@ -34,8 +35,6 @@ const HomeScreen = ({route, navigation}) => {
       });
     });
   }
-
-
 
   useEffect(() => {
     return () => {
@@ -62,7 +61,6 @@ const HomeScreen = ({route, navigation}) => {
       );
     });
   }
-
 
 
   return <Text style={{color: 'white'}}>Home Screen</Text>;

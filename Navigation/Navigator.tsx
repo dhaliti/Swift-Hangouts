@@ -15,7 +15,7 @@ const {Navigator, Screen} = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
       <NavigationContainer theme={DarkTheme} >
-        <Navigator screenOptions={{headerShown: false}} initialRouteName={"Home"}>
+        <Navigator screenOptions={{headerShown: false}} initialRouteName={"Contacts"}>
           <Screen name="Home" component={HomeScreen} />
           <Screen name="Contacts" component={ContactScreen} />
           <Screen name="Settings" component={SettingsScreen} />
