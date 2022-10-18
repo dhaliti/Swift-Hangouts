@@ -7,10 +7,10 @@ import {
   Pressable,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 import {useIsFocused} from '@react-navigation/native';
-import {useFocusEffect} from '@react-navigation/native';
 
 const db = SQLite.openDatabase(
   {
@@ -26,6 +26,8 @@ const db = SQLite.openDatabase(
 const ContactScreen = ({navigation, route}) => {
   const [contacts, setContacts] = useState([]);
   const [table, setTable] = useState(false);
+  const [language, setLanguage] = useState('');
+  const [theme, setTheme] = useState('');
   const isFocused = useIsFocused();
 
   let init: any = [];
@@ -39,15 +41,26 @@ const ContactScreen = ({navigation, route}) => {
 
   useEffect(() => {
     return () => {
-      if (table == false) {
-        createTable();
-      }
+      createTable();
+      createPref();
+      getPref();
       getData();
     };
   }, [isFocused]);
 
   function test() {
     setContacts(init);
+  }
+
+  async function getPref() {
+    await db.transaction(async tx => {
+      tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
+        console.log(result.rows.item(0).theme);
+        console.log(result.rows.item(0).language);
+        setLanguage(result.rows.item(0).language);
+        setTheme(result.rows.item(0).theme);
+      });
+    });
   }
 
   async function getData() {
@@ -67,13 +80,34 @@ const ContactScreen = ({navigation, route}) => {
     });
   }
 
+  async function createPref() {
+    await db.transaction(async tx => {
+      await tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS Preferences (id INTEGER PRIMARY KEY AUTOINCREMENT, language VARCHAR(10), theme VARCHAR(10));',
+        [],
+        (tx, result) => {
+          console.log('Create Preferences');
+        }
+      );
+    });
+    await db.transaction(async tx => {
+      await tx.executeSql(
+        'INSERT INTO Preferences (language, theme) VALUES ("en", "dark");',
+        [],
+        (tx, result) => {
+          console.log('Inserted Preferences');
+        }
+      );
+    });
+  }
+
   async function createTable() {
     await db.transaction(async tx => {
       await tx.executeSql(
         'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30), email VARCHAR(30));',
         [],
         (tx, result) => {
-          console.log('table ' + result);
+          console.log('Create Contact');
           setTable(true);
         },
       );
@@ -108,29 +142,45 @@ const ContactScreen = ({navigation, route}) => {
     navigation.navigate('Home');
   }
 
-  const goToSettings = () => navigation.navigate('Settings');
+  const goToSettings = () => navigation.navigate('Settings', {'theme': theme, 'language': language} );
 
   const addContact = () => navigation.navigate('AddContactScreen');
 
+
   return (
-    <View style={style.general}>
+    <View style={theme == 'light' ? style.generalLight : style.generalDark}>
       <View
         style={{
           display: 'flex',
           flexDirection: 'row',
+          justifyContent: 'space-between',
         }}>
         <Text style={style.title}>Contacts</Text>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+          }}
+          onPress={goToSettings}>
+          <Image
+            style={{
+              width: 25,
+              height: 25,
+              marginRight: 30,
+            }}
+            source={require('../../images/settings.png')}
+          />
+        </TouchableOpacity>
       </View>
       <FlatList
         data={contacts}
         renderItem={({item}) => (
-
-            <TouchableOpacity
-              style={style.listElement}
-              onPress={() => navigation.navigate('ContactDetails', item)}>
-              <View style={{
+          <TouchableOpacity
+            style={style.listElement}
+            onPress={() => navigation.navigate('ContactDetails', item)}>
+            <View
+              style={{
                 display: 'flex',
-                flexDirection: 'row'
+                flexDirection: 'row',
               }}>
               <Text style={style.initials}>
                 {item.name.charAt(0).toUpperCase()}{' '}
@@ -141,8 +191,8 @@ const ContactScreen = ({navigation, route}) => {
                 {item.name.slice(1)} {item.surname.charAt(0).toUpperCase()}
                 {item.surname.slice(1)}
               </Text>
-              </View>
-            </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         )}
       />
       {/*<View*/}
@@ -167,8 +217,13 @@ const ContactScreen = ({navigation, route}) => {
 };
 
 const style = StyleSheet.create({
-  general: {
+  generalDark: {
     backgroundColor: '#1A1919',
+    flex: 1,
+  },
+
+  generalLight: {
+    backgroundColor: 'white',
     flex: 1,
   },
   title: {
@@ -237,7 +292,7 @@ const style = StyleSheet.create({
     // marginBottom: 20,
     bottom: 5,
     marginRight: 15,
- //   left: 10,
+    //   left: 10,
   },
 });
 
