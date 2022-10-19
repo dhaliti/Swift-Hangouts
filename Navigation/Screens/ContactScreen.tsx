@@ -27,16 +27,10 @@ const ContactScreen = ({navigation, route}) => {
   const [contacts, setContacts] = useState([]);
   const [table, setTable] = useState(false);
   const [language, setLanguage] = useState('');
-  const [theme, setTheme] = useState('');
+  const [theme, setTheme] = useState('dark');
   const isFocused = useIsFocused();
 
   let init: any = [];
-  /*  useFocusEffect(() => {
-      console.log('AG');
-      getData();
-    return () => {
-    };
-  });*/
 
   useEffect(() => {
     return () => {
@@ -50,7 +44,6 @@ const ContactScreen = ({navigation, route}) => {
   function test() {
     setContacts(init);
   }
-
   async function getPref() {
     await db.transaction(async tx => {
       tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
@@ -58,11 +51,9 @@ const ContactScreen = ({navigation, route}) => {
         console.log(result.rows.item(0).language);
         setLanguage(result.rows.item(0).language);
         setTheme(result.rows.item(0).theme);
-
       });
     });
   }
-
   async function getData() {
     await db.transaction(async tx => {
       tx.executeSql('SELECT * FROM Contact', [], (tx, result) => {
@@ -142,7 +133,7 @@ const ContactScreen = ({navigation, route}) => {
     navigation.navigate('Home');
   }
 
-  const goToSettings = () => navigation.navigate('Settings', {'theme': theme, 'language': language} );
+  const goToSettings = () => navigation.navigate('Settings');
 
   const addContact = () => navigation.navigate('AddContactScreen');
 
@@ -155,7 +146,7 @@ const ContactScreen = ({navigation, route}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={style.title}>Contacts</Text>
+        <Text style={theme == 'light' ? style.titleLight : style.titleDark}>Contacts</Text>
         <TouchableOpacity
           style={{
             justifyContent: 'center',
@@ -167,7 +158,11 @@ const ContactScreen = ({navigation, route}) => {
               height: 25,
               marginRight: 30,
             }}
-            source={require('../../images/settings.png')}
+            source={
+              theme == 'dark'
+                ? require('../../images/settingsDark.png')
+                : require('../../images/settingsLight.png')
+            }
           />
         </TouchableOpacity>
       </View>
@@ -175,18 +170,18 @@ const ContactScreen = ({navigation, route}) => {
         data={contacts}
         renderItem={({item}) => (
           <TouchableOpacity
-            style={style.listElement}
+            style={theme == 'light' ? style.listElementLight : style.listElementDark}
             onPress={() => navigation.navigate('ContactDetails', item)}>
             <View
               style={{
                 display: 'flex',
                 flexDirection: 'row',
               }}>
-              <Text style={style.initials}>
+              <Text style={theme == 'light' ? style.initialsLight : style.initialsDark}>
                 {item.name.charAt(0).toUpperCase()}{' '}
                 {item.surname.charAt(0).toUpperCase()}
               </Text>
-              <Text style={style.listText}>
+              <Text style={theme == 'light' ? style.listTextLight : style.listTextDark}>
                 {item.name.charAt(0).toUpperCase()}
                 {item.name.slice(1)} {item.surname.charAt(0).toUpperCase()}
                 {item.surname.slice(1)}
@@ -226,13 +221,21 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
-  title: {
+  titleDark: {
     fontSize: 40,
     color: 'white',
     fontFamily: 'FuturaNewBold',
     padding: 30,
   },
-  listElement: {
+
+  titleLight: {
+    fontSize: 40,
+    color: 'black',
+    fontFamily: 'FuturaNewBold',
+    padding: 30,
+  },
+
+  listElementDark: {
     borderBottomWidth: 0.5,
     borderBottomColor: 'white',
     marginBottom: 5,
@@ -243,7 +246,20 @@ const style = StyleSheet.create({
     alignSelf: 'auto',
     padding: 12,
   },
-  listText: {
+
+  listElementLight: {
+    borderBottomWidth: 1.5,
+    borderBottomColor: 'black',
+    marginBottom: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    fontWeight: 'bold',
+    //height: 50,
+    alignSelf: 'auto',
+    padding: 12,
+  },
+
+  listTextDark: {
     color: 'white',
     textAlignVertical: 'auto',
     fontSize: 16,
@@ -251,6 +267,16 @@ const style = StyleSheet.create({
     fontFamily: 'FuturaNewMedium',
     fontSize: 18,
   },
+
+  listTextLight: {
+    color: 'black',
+    textAlignVertical: 'auto',
+    fontSize: 16,
+    padding: 5,
+    fontFamily: 'FuturaNewMedium',
+    fontSize: 18,
+  },
+
   addButton: {
     width: 75,
     height: 75,
@@ -277,7 +303,8 @@ const style = StyleSheet.create({
     fontWeight: '300',
     shadowRadius: 20,
   },
-  initials: {
+
+  initialsDark: {
     width: 40,
     height: 40,
     textAlign: 'center',
@@ -294,6 +321,25 @@ const style = StyleSheet.create({
     marginRight: 15,
     //   left: 10,
   },
+
+  initialsLight: {
+    width: 40,
+    height: 40,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 14,
+    fontFamily: 'FuturaNewBold',
+    borderRadius: 100,
+    color: 'black',
+    borderColor: 'black',
+    borderWidth: 2,
+    // marginTop: 100,
+    // marginBottom: 20,
+    bottom: 5,
+    marginRight: 15,
+    //   left: 10,
+  },
+
 });
 
 export default ContactScreen;

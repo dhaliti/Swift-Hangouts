@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Switch, Pressable, Alert} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 import {Translate} from '../../translation/translate';
-import {useIsFocused} from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 const db = SQLite.openDatabase(
   {
@@ -15,13 +15,14 @@ const db = SQLite.openDatabase(
   },
 );
 
-const SettingsScreen = ({navigation, route}) => {
-  const [theme, setTheme] = useState('');
+const SettingsScreen = () => {
+  const [theme, setTheme] = useState('dark');
   const [language, setLanguage] = useState('');
   const [lightThemeOn, setLightThemeOn] = useState(false);
   const [switchStatementLanguage, setSwitchStatementLanguage] = useState('');
   const [switchStatementTheme, setSwitchStatementTheme] = useState('');
   useState('');
+  const [title, setTitle] = useState('');
   const [languageTitle, setLanguageTitle] = useState('');
   const [themeTitle, setThemeTitle] = useState('');
   const isFocused = useIsFocused();
@@ -29,45 +30,55 @@ const SettingsScreen = ({navigation, route}) => {
   useEffect(() => {
     return () => {
       getPref();
-      if (language == 'en') {
-        setItemsEn();
-        setSwitchStatementLanguage(
-          Translate.en.Settings.switchStatementLanguage,
-        );
-        setLanguageTitle(Translate.en.Settings.languageTitle);
-        setThemeTitle(Translate.en.Settings.themeTitle);
-        if (theme == 'dark') {
-          setSwitchStatementTheme(
-            Translate.en.Settings.switchStatementThemeLight,
-          );
-        } else {
-          setSwitchStatementTheme(
-            Translate.en.Settings.switchStatementThemeDark,
-          );
-        }
-      } else {
-        setItemsFr();
-        setSwitchStatementLanguage(
-          Translate.fr.Settings.switchStatementLanguage,
-        );
-        setLanguageTitle(Translate.fr.Settings.languageTitle);
-        setThemeTitle(Translate.fr.Settings.themeTitle);
-        if (theme == 'dark') {
-          setSwitchStatementTheme(
+      setItems();
+      setThemeLang();
+      console.log('Settings');
+    };
+  }, );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getPref();
+      setItems();
+      setThemeLang();
+      return () => console.log('Settings');
+    }, [getPref, setItems, setThemeLang]),
+  );
+
+
+  const setItems = () => {
+    if (language == 'en') {
+      setSwitchStatementLanguage(Translate.en.Settings.switchStatementLanguage);
+      setLanguageTitle(Translate.en.Settings.languageTitle);
+      setThemeTitle(Translate.en.Settings.themeTitle);
+      setTitle(Translate.en.Settings.title);
+    } else if (language == 'fr') {
+      setSwitchStatementLanguage(Translate.fr.Settings.switchStatementLanguage);
+      setLanguageTitle(Translate.fr.Settings.languageTitle);
+      setThemeTitle(Translate.fr.Settings.themeTitle);
+      setTitle(Translate.fr.Settings.title);
+    }
+  };
+
+  const setThemeLang = () => {
+    if (language == 'fr') {
+      theme == 'dark'
+        ? setSwitchStatementTheme(
             Translate.fr.Settings.switchStatementThemeDark,
-          );
-        } else {
-          setSwitchStatementTheme(
+          )
+        : setSwitchStatementTheme(
             Translate.fr.Settings.switchStatementThemeLight,
           );
-        }
-      }
-    };
-  }, [isFocused]);
-
-  const setItemsEn = () => {
-
-  }
+    } else {
+      theme == 'dark'
+        ? setSwitchStatementTheme(
+            Translate.en.Settings.switchStatementThemeDark,
+          )
+        : setSwitchStatementTheme(
+            Translate.en.Settings.switchStatementThemeLight,
+          );
+    }
+  };
 
   async function getPref() {
     await db.transaction(async tx => {
@@ -80,41 +91,66 @@ const SettingsScreen = ({navigation, route}) => {
     });
   }
 
-  const changeTheme = () => {
-    setLightThemeOn(!lightThemeOn);
-  };
+  async function changeTheme() {
+    setTheme('light');
+   // setItems();
+    setThemeLang();
+    if (theme == 'dark') {
+      await db.transaction(async tx => {
+        tx.executeSql(
+          'UPDATE Preferences SET theme="light";',
+          [],
+          (tx, result) => {
+          },
+        );
+      });
+    } else {
+      await db.transaction(async tx => {
+        setTheme('dark');
+     //   setItems();
+        setThemeLang();
+        tx.executeSql(
+          'UPDATE Preferences SET theme="dark";',
+          [],
+          (tx, result) => {
+          },
+        );
+      });
+    }
+  }
 
-  async function changeLanguage ()  {
+  async function changeLanguage() {
+    setLanguage('fr');
+    setItems();
+    setThemeLang();
     if (language == 'en') {
-      Alert.alert('français');
       await db.transaction(async tx => {
         tx.executeSql(
           'UPDATE Preferences SET language="fr";',
           [],
           (tx, result) => {
-            setLanguage('fr');
           },
         );
       });
     } else {
-      Alert.alert('english');
       await db.transaction(async tx => {
+        setLanguage('en');
+        setItems();
+        setThemeLang();
         tx.executeSql(
           'UPDATE Preferences SET language="en";',
           [],
           (tx, result) => {
-            setLanguage('en');
           },
         );
       });
     }
-  };
-
+  }
 
   return (
     <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
       <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
-        Settings
+        {title}
       </Text>
       <View
         style={{
@@ -126,7 +162,13 @@ const SettingsScreen = ({navigation, route}) => {
         <Text style={theme == 'dark' ? style.sectionDark : style.sectionLight}>
           {languageTitle}
         </Text>
-        <Pressable style={style.changeLanguageDark} onPress={changeLanguage}>
+        <Pressable
+          style={
+            theme == 'dark'
+              ? style.changeLanguageDark
+              : style.changeLanguageLight
+          }
+          onPress={changeLanguage}>
           <Text
             style={{
               color: 'white',
@@ -163,7 +205,11 @@ const SettingsScreen = ({navigation, route}) => {
         <Text style={theme == 'dark' ? style.sectionDark : style.sectionLight}>
           {themeTitle}
         </Text>
-        <Pressable style={style.changeThemeDark} onPress={changeTheme}>
+        <Pressable
+          style={
+            theme == 'dark' ? style.changeThemeDark : style.changeThemeLight
+          }
+          onPress={changeTheme}>
           <Text
             style={{
               color: 'white',
@@ -197,8 +243,24 @@ const style = StyleSheet.create({
     padding: 30,
   },
 
+  titleLight: {
+    fontSize: 40,
+    color: 'black',
+    fontFamily: 'FuturaNewBold',
+    padding: 30,
+  },
+
   sectionDark: {
     color: 'white',
+    fontSize: 16,
+    fontFamily: 'FuturaNewBold',
+    padding: 15,
+    marginLeft: 20,
+    textTransform: 'uppercase',
+  },
+
+  sectionLight: {
+    color: 'black',
     fontSize: 16,
     fontFamily: 'FuturaNewBold',
     padding: 15,
@@ -211,8 +273,17 @@ const style = StyleSheet.create({
     color: '#00babc',
   },
 
+  switchLight: {
+    alignSelf: 'center',
+    color: '#00babc',
+  },
+
   optionsDark: {
     color: 'white',
+  },
+
+  optionsLight: {
+    color: 'black',
   },
 
   changeLanguageDark: {
@@ -222,7 +293,20 @@ const style = StyleSheet.create({
     marginRight: 30,
   },
 
+  changeLanguageLight: {
+    backgroundColor: '#00babc',
+    padding: 15,
+    borderRadius: 4,
+    marginRight: 30,
+  },
+
   changeThemeDark: {
+    backgroundColor: '#00babc',
+    padding: 15,
+    borderRadius: 4,
+  },
+
+  changeThemeLight: {
     backgroundColor: '#00babc',
     padding: 15,
     borderRadius: 4,

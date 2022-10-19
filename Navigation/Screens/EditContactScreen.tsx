@@ -8,6 +8,8 @@ import {
   Alert,
 } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
+import { useFocusEffect } from "@react-navigation/native";
+import { Translate } from "../../translation/translate";
 
 const db = SQLite.openDatabase(
   {
@@ -21,16 +23,77 @@ const db = SQLite.openDatabase(
 );
 
 const EditContactScreen = ({navigation, route}) => {
+
+  const [namePlaceholder, setNamePlaceholder] = useState('');
+  const [surnamePlaceholder, setSurnamePlaceholder] = useState('');
+  const [phonenumberPlaceholder, setPhonenumberPlaceholder] = useState('');
+  const [emailPlaceholder, setEmailPlaceholder] = useState('');
+  const [editButton, setEditButton] = useState('');
+  const [title, setTitle] = useState('');
+
+  const [incompleteForm, setIncompleteForm] = useState('');
+  const [missingPhone, setMissingPhone] = useState('');
+  const [missingName, setMissingName] = useState('');
+  const [editedSuccessfully, setEditedSuccessfully] = useState('');
+
   const [name, setName] = useState(route.params.name);
   const [surname, setSurname] = useState(route.params.surname);
   const [email, setEmail] = useState(route.params.email);
   const [phonenumber, setPhonenumber] = useState(route.params.phone_number);
+  const [theme, setTheme] = useState('dark');
+  const [language, setLanguage] = useState('');
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getPref();
+      setItems();
+      return () => console.log('EditScreen');
+    }, [getPref]),
+  );
+
+  const setItems = () => {
+    if (language == 'en') {
+      setNamePlaceholder(Translate.en.EditContact.namePlaceholder);
+      setSurnamePlaceholder(Translate.en.EditContact.surnamePlaceholder);
+      setPhonenumberPlaceholder(Translate.en.EditContact.phone_numberPlaceholder);
+      setEmailPlaceholder(Translate.en.EditContact.emailPlaceholder);
+      setEditButton(Translate.en.EditContact.editButton);
+      setTitle(Translate.en.EditContact.title);
+
+      setIncompleteForm(Translate.en.EditContact.incompleteForm);
+      setMissingName(Translate.en.EditContact.missingName);
+      setMissingPhone(Translate.en.EditContact.missingPhone);
+      setEditedSuccessfully(Translate.en.EditContact.addedSuccessfully);
+    }
+    else {
+      setNamePlaceholder(Translate.fr.EditContact.namePlaceholder);
+      setSurnamePlaceholder(Translate.fr.EditContact.surnamePlaceholder);
+      setPhonenumberPlaceholder(Translate.fr.EditContact.phone_numberPlaceholder);
+      setEmailPlaceholder(Translate.fr.EditContact.emailPlaceholder);
+      setEditButton(Translate.fr.EditContact.editButton);
+
+      setTitle(Translate.fr.EditContact.title);
+      setMissingName(Translate.fr.EditContact.missingName);
+      setMissingPhone(Translate.fr.EditContact.missingPhone);
+      setIncompleteForm(Translate.fr.EditContact.incompleteForm);
+      setEditedSuccessfully(Translate.fr.EditContact.addedSuccessfully);
+    }
+  }
+
+  async function getPref() {
+    await db.transaction(async tx => {
+      tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
+        setLanguage(result.rows.item(0).language);
+        setTheme(result.rows.item(0).theme);
+      });
+    });
+  }
 
   async function editContact() {
     if (!name && !surname) {
-      Alert.alert('Missing information', 'Please enter a name or a surname');
+      Alert.alert(incompleteForm, missingName);
     } else if (!phonenumber) {
-      Alert.alert('Missing information', 'Phone number is missing');
+      Alert.alert(incompleteForm, missingPhone);
     } else {
       await db.transaction(async tx => {
         tx.executeSql(
@@ -45,7 +108,7 @@ const EditContactScreen = ({navigation, route}) => {
             '" WHERE phone_number="' + phonenumber + '";',
           [],
           (tx, result) => {
-            Alert.alert('Confirmation', 'Contact gas been edited');
+            Alert.alert(title, editedSuccessfully);
             navigation.navigate('Contacts');
           },
         );
@@ -55,39 +118,39 @@ const EditContactScreen = ({navigation, route}) => {
 
 
   return (
-    <View style={style.general}>
-      <Text style={style.title}>Edit Contact</Text>
+    <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
+      <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>{title}</Text>
       <TextInput
-        style={style.input}
+        style={theme == 'dark' ? style.inputDark : style.inputLight}
         placeholderTextColor="grey"
-        placeholder="Prénom"
+        placeholder={namePlaceholder}
         defaultValue={name}
         onChangeText={newName => setName(newName)}
       />
       <TextInput
-        style={style.input}
+        style={theme == 'dark' ? style.inputDark : style.inputLight}
         placeholderTextColor="grey"
-        placeholder="Nom"
+        placeholder={surnamePlaceholder}
         defaultValue={surname}
         onChangeText={newName => setSurname(newName)}
       />
       <TextInput
-        style={style.input}
+        style={theme == 'dark' ? style.inputDark : style.inputLight}
         placeholderTextColor="grey"
-        placeholder="Téléphone"
+        placeholder={phonenumberPlaceholder}
         keyboardType="numeric"
         defaultValue={phonenumber}
         onChangeText={newName => setPhonenumber(newName)}
       />
       <TextInput
-        style={style.input}
+        style={theme == 'dark' ? style.inputDark : style.inputLight}
         placeholderTextColor="grey"
-        placeholder="Email"
+        placeholder={emailPlaceholder}
         defaultValue={email}
         onChangeText={newName => setEmail(newName)}
       />
       <Pressable style={style.editButton} onPress={editContact}>
-        <Text style={{color: 'white'}}>EDIT</Text>
+        <Text style={style.editButtonText}>{editButton}</Text>
       </Pressable>
     </View>
   );
@@ -96,22 +159,36 @@ const EditContactScreen = ({navigation, route}) => {
 export default EditContactScreen;
 
 const style = StyleSheet.create({
-  general: {
+  generalDark: {
     backgroundColor: '#1A1919',
     flex: 1,
   },
-  title: {
+
+  generalLight: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+
+  titleDark: {
     fontSize: 40,
     color: 'white',
     fontFamily: 'FuturaNewBold',
     textAlign: 'center',
     padding: 40,
   },
-  input: {
+
+  titleLight: {
+    fontSize: 40,
+    color: 'black',
+    fontFamily: 'FuturaNewBold',
+    textAlign: 'center',
+    padding: 40,
+  },
+
+  inputDark: {
     color: 'white',
     backgroundColor: '#202122',
     marginBottom: 5,
-    //height: 50,
     fontFamily: 'FuturaNewBook',
     marginLeft: 30,
     marginRight: 30,
@@ -119,6 +196,19 @@ const style = StyleSheet.create({
     paddingLeft: 15,
     fontSize: 18,
   },
+
+  inputLight: {
+    color: 'black',
+    backgroundColor: 'lightgrey',
+    marginBottom: 5,
+    fontFamily: 'FuturaNewBook',
+    marginLeft: 30,
+    marginRight: 30,
+    padding: 12,
+    paddingLeft: 15,
+    fontSize: 18,
+  },
+
   editButton: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -130,4 +220,9 @@ const style = StyleSheet.create({
     marginRight: 50,
     backgroundColor: '#00babc',
   },
+  editButtonText: {
+    color: 'white',
+    textTransform: 'uppercase',
+    fontFamily: 'FuturaNewBold',
+  }
 });
