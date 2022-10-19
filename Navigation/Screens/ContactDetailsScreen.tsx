@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import {StyleSheet, Text, View, Alert, Pressable, Image} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
+import { Translate } from "../../translation/translate";
 
 const db = SQLite.openDatabase(
   {
@@ -20,9 +21,54 @@ const ContactDetailsScreen = ({navigation, route}) => {
     route.params.surname.slice(1);
   const phone_number = route.params.phone_number.replace(/\d{2}(?=.)/g, '$& ');
   const email = route.params.email;
+  const [alertConfirmationTitle, setAlertConfirmationTitle] = useState('');
+  const [alertConfirmationText, setAlertConfirmationText] = useState('');
+  const [editButton, setEditButton] = useState('');
+  const [deleteButton, setDeleteButton] = useState('');
+  const [language, setLanguage] = useState('');
+  const [theme, setTheme] = useState('');
+
+
+  useEffect(() => {
+    return () => {
+      getPref();
+      if (language == 'en') {
+        setAlertConfirmationTitle(
+          Translate.en.ContactDetails.alertConfirmationTitle,
+        );
+        setAlertConfirmationText(
+          Translate.en.ContactDetails.alertConfirmationText,
+        );
+        setEditButton(Translate.en.ContactDetails.editButton);
+        setDeleteButton(Translate.en.ContactDetails.deleteButton);
+      }
+      if (language == 'fr') {
+        setAlertConfirmationTitle(
+          Translate.fr.ContactDetails.alertConfirmationTitle,
+        );
+        setAlertConfirmationText(
+          Translate.fr.ContactDetails.alertConfirmationText,
+        );
+        setEditButton(Translate.fr.ContactDetails.editButton);
+        setDeleteButton(Translate.fr.ContactDetails.deleteButton);
+      }
+    };
+  }, []);
+
+
+  async function getPref() {
+    await db.transaction(async tx => {
+      tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
+        console.log(result.rows.item(0).theme);
+        console.log(result.rows.item(0).language);
+        setLanguage(result.rows.item(0).language);
+        setTheme(result.rows.item(0).theme);
+      });
+    });
+  }
 
   function remove() {
-    Alert.alert('Are you sure?', 'Delete confirmation', [
+    Alert.alert(alertConfirmationTitle, 'Delete confirmation', [
       {
         text: 'Yes',
         onPress: async () => {

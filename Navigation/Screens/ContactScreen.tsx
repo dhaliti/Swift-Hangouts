@@ -31,7 +31,6 @@ const ContactScreen = ({navigation, route}) => {
   const isFocused = useIsFocused();
 
   let init: any = [];
-
   /*  useFocusEffect(() => {
       console.log('AG');
       getData();
@@ -59,6 +58,7 @@ const ContactScreen = ({navigation, route}) => {
         console.log(result.rows.item(0).language);
         setLanguage(result.rows.item(0).language);
         setTheme(result.rows.item(0).theme);
+
       });
     });
   }
