@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Alert, Pressable, Image} from 'react-native';
+import {Linking, StyleSheet, Text, View, Alert, Pressable, Image} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 import {Translate} from '../../translation/translate';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+
 
 const db = SQLite.openDatabase(
   {
@@ -46,6 +47,15 @@ const ContactDetailsScreen = ({navigation, route}) => {
         setTheme(result.rows.item(0).theme);
       });
     });
+  }
+
+  function call() {
+    Linking.openURL('tel:' + phone_number);
+  }
+
+
+  function sendMessage() {
+    Linking.openURL('sms:' + phone_number+'?body=');
   }
 
   const setItems = () => {
@@ -142,6 +152,34 @@ const ContactDetailsScreen = ({navigation, route}) => {
               : style.deleteButtonTextLight
           }>
           {deleteButton}
+        </Text>
+      </Pressable>
+      <Pressable
+        onPress={call}
+        style={
+          theme == 'dark' ? style.callButtonDark : style.callButtonLight
+        }>
+        <Text
+          style={
+            theme == 'dark'
+              ? style.callButtonTextDark
+              : style.callButtonTextLight
+          }>
+          Call
+        </Text>
+      </Pressable>
+      <Pressable
+        onPress={sendMessage}
+        style={
+          theme == 'dark' ? style.callButtonDark : style.callButtonLight
+        }>
+        <Text
+          style={
+            theme == 'dark'
+              ? style.callButtonTextDark
+              : style.callButtonTextLight
+          }>
+          Send Message
         </Text>
       </Pressable>
     </View>
@@ -279,6 +317,43 @@ const style = StyleSheet.create({
     fontFamily: 'FuturaNewBold',
     textTransform: 'uppercase',
   },
+
+  callButtonDark: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    //  marginRight: 20,
+    marginLeft: 50,
+    marginRight: 50,
+    backgroundColor: 'grey',
+  },
+
+  callButtonLight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    //  marginRight: 20,
+    marginLeft: 50,
+    marginRight: 50,
+    backgroundColor: 'grey',
+  },
+
+  callButtonTextDark: {
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    textTransform: 'uppercase',
+  },
+
+  callButtonTextLight: {
+    color: 'black',
+    fontFamily: 'FuturaNewBold',
+    textTransform: 'uppercase',
+  },
+
   profile: {
     marginTop: 100,
     width: 150,

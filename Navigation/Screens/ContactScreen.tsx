@@ -10,7 +10,8 @@ import {
   Image,
 } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
-import {useIsFocused} from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {PermissionsAndroid} from 'react-native';
 
 const db = SQLite.openDatabase(
   {
@@ -34,12 +35,44 @@ const ContactScreen = ({navigation, route}) => {
 
   useEffect(() => {
     return () => {
+      requestContactsPermission();
       createTable();
       createPref();
       getPref();
       getData();
     };
   }, [isFocused]);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     createTable();
+  //     createPref();
+  //     getPref();
+  //     getData();
+  //     return () => console.log('Contacts');
+  //   }, [getPref, createTable, createPref, getData]),
+  // );
+
+  async function requestContactsPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: 'Contacts permissions',
+          message: 'This application needs to get access to your contacts',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the contacts');
+      } else {
+        console.log('Contacts permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   function test() {
     setContacts(init);

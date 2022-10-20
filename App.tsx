@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import AppNavigator from './Navigation/Navigator';
 import 'react-native-gesture-handler';
 import { StyleSheet, View } from "react-native";

@@ -12,6 +12,7 @@ import {
 import SQLite, {openDatabase} from 'react-native-sqlite-storage';
 import { useFocusEffect } from "@react-navigation/native";
 import { Translate } from "../../translation/translate";
+import Contacts, { Contact } from "react-native-contacts";
 
 const db = SQLite.openDatabase(
   {
@@ -114,6 +115,21 @@ const AddContactScreen = ({navigation}) => {
         );
       });
       Alert.alert(title, addedSuccessfully);
+      const newPerson = {
+        emailAddresses: [
+          {
+            label: 'work',
+            email: email,
+          }
+        ],
+        phoneNumbers: [{
+          label: 'Hangouts',
+          number: phonenumber,
+        }],
+        familyName: surname,
+        givenName: name,
+      };
+      await Contacts.addContact(newPerson as Contact);
       navigation.goBack();
     }
   }
