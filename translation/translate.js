@@ -1,5 +1,10 @@
 export const Translate = {
   en: {
+    Contacts: {
+      emailButton: 'Send Email',
+      SMSButton: 'Send SMS',
+      callButton: 'Call',
+    },
     ContactDetails: {
       editButton: 'edit',
       deleteButton: 'delete',
@@ -38,11 +43,17 @@ export const Translate = {
       missingPhone: 'Phone number missing for new contact',
       missingName: 'Name missing for new contact',
       addedSuccessfully : 'New Contact has been added successfully!',
+      contactAlreadyExists: 'This phone number is already used by one of your contacts'
     },
     Timer: 'Your application remained in the background for: ',
   },
 
   fr: {
+    Contacts: {
+      emailButton: 'Envoyer un email',
+      SMSButton: 'Envoyer un SMS',
+      callButton: 'Appeler',
+    },
     ContactDetails: {
       editButton: 'modifier',
       deleteButton: 'supprimer',
@@ -82,6 +93,7 @@ export const Translate = {
       missingPhone: 'Votre nouveau contact doit avoir un numéro de téléphone',
       missingName: 'Votre nouveau contact doit avoir un prénom',
       addedSuccessfully : 'Votre nouveau contact a été enregistré avec succès !',
+      contactAlreadyExists: 'Un contact avec ce numéro de téléphone est déjà enregistré !'
     },
     Timer: "L'application est restée à l'arrière-plan pendant: ",
   },

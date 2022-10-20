@@ -54,6 +54,7 @@ const ContactScreen = ({navigation, route}) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log('callback');
+      requestContactsPermission();
       getData();
       createTable();
       createPref();
@@ -101,19 +102,6 @@ const ContactScreen = ({navigation, route}) => {
     newSeconds = 0;
   }
 
-  function getLanguage() {
-    return new Promise(async function (resolve, reject) {
-      await db.transaction(async tx => {
-        tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
-          console.log(result.rows.item(0).theme);
-          console.log(result.rows.item(0).language);
-          setLanguage(result.rows.item(0).language);
-          setTheme(result.rows.item(0).theme);
-        });
-      });
-    });
-  }
-
   function startCount() {
     startTimer = BackgroundTimer.runBackgroundTimer(() => {
       console.log(newSeconds);
@@ -143,9 +131,6 @@ const ContactScreen = ({navigation, route}) => {
     }
   }
 
-  function test() {
-    setContacts(init);
-  }
   async function getPref() {
     await db.transaction(async tx => {
       tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
@@ -162,7 +147,7 @@ const ContactScreen = ({navigation, route}) => {
         for (let i = 0; i < result.rows.length; i++) {
           init = [...init, result.rows.item(i)];
         }
-        test();
+        setContacts(init);
       });
     });
   }
@@ -201,38 +186,9 @@ const ContactScreen = ({navigation, route}) => {
         [],
         (tx, result) => {
           console.log('Create Contact');
-          setTable(true);
         },
       );
     });
-  }
-
-  async function testContact() {
-    await db.transaction(async tx => {
-      console.log('testContact — begining');
-      tx.executeSql(
-        'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("damir", "haliti", "0649815966", "damirhaliti@yahoo.fr")',
-        [],
-        (tx, result) => {
-          console.log('Inserted' + result);
-        },
-      );
-    });
-    navigation.navigate('Home');
-  }
-
-  async function testContact2() {
-    await db.transaction(async tx => {
-      console.log('testContact2 — begining');
-      tx.executeSql(
-        'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("maria", "shvetsova", "0123456789", "mariechvetsov@yahoo.fr")',
-        [],
-        (tx, result) => {
-          console.log('Inserted2' + result);
-        },
-      );
-    });
-    navigation.navigate('Home');
   }
 
   const goToSettings = () => navigation.navigate('Settings');
@@ -301,23 +257,9 @@ const ContactScreen = ({navigation, route}) => {
           </TouchableOpacity>
         )}
       />
-      {/*<View*/}
-      {/*  style={{*/}
-      {/*    justifyContent: 'flex-end',*/}
-      {/*    alignItems: 'flex-end',*/}
-      {/*  }}>*/}
-      {/*</View>*/}
-
-      {/*<View style={{bottom: 50, right: 10, zIndex: 500}}>*/}
       <Pressable style={style.addButton} onPress={addContact}>
         <Text style={style.plusSign}>+</Text>
       </Pressable>
-      {/*</View>*/}
-      {/*   <Button title="Go to Settings" onPress={goToSettings} />
-      <Button title={'Test Contact'} onPress={testContact} />
-      <Button title={'Test Contact 2'} onPress={testContact2} />
-*/}
-      {/*<Button title={'Drop Table'} onPress={dropTable} />*/}
     </View>
   );
 };

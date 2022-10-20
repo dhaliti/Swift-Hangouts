@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 
 import SQLite, {openDatabase} from 'react-native-sqlite-storage';
-import { useFocusEffect } from "@react-navigation/native";
-import { Translate } from "../../translation/translate";
-import Contacts, { Contact } from "react-native-contacts";
+import {useFocusEffect} from '@react-navigation/native';
+import {Translate} from '../../translation/translate';
+import Contacts, {Contact} from 'react-native-contacts';
 
 const db = SQLite.openDatabase(
   {
@@ -26,7 +26,6 @@ const db = SQLite.openDatabase(
 );
 
 const AddContactScreen = ({navigation}) => {
-
   const [namePlaceholder, setNamePlaceholder] = useState('');
   const [surnamePlaceholder, setSurnamePlaceholder] = useState('');
   const [phonenumberPlaceholder, setPhonenumberPlaceholder] = useState('');
@@ -45,14 +44,17 @@ const AddContactScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [theme, setTheme] = useState('');
   const [language, setLanguage] = useState('');
+  const [flag, setFlag] = useState(true);
 
+  let contacts: any = [];
 
   useFocusEffect(
     React.useCallback(() => {
       getPref();
       setItems();
+      getData();
       return () => console.log('ContactDetailsScreen');
-    }, [getPref, setItems]),
+    }, [getPref, setItems, getData]),
   );
 
   const setItems = () => {
@@ -67,8 +69,7 @@ const AddContactScreen = ({navigation}) => {
       setMissingName(Translate.en.AddContact.missingName);
       setMissingPhone(Translate.en.AddContact.missingPhone);
       setAddedSuccessfully(Translate.en.AddContact.addedSuccessfully);
-    }
-    else {
+    } else {
       setNamePlaceholder(Translate.fr.AddContact.namePlaceholder);
       setSurnamePlaceholder(Translate.fr.AddContact.surnamePlaceholder);
       setPhonenumberPlaceholder(Translate.fr.AddContact.phonePlaceholder);
@@ -80,7 +81,7 @@ const AddContactScreen = ({navigation}) => {
       setIncompleteForm(Translate.fr.AddContact.incompleteForm);
       setAddedSuccessfully(Translate.fr.AddContact.addedSuccessfully);
     }
-  }
+  };
 
   async function getPref() {
     await db.transaction(async tx => {
@@ -91,52 +92,83 @@ const AddContactScreen = ({navigation}) => {
     });
   }
 
+  async function getData() {
+    await db.transaction(async tx => {
+      tx.executeSql('SELECT * FROM Contact', [], (tx, result) => {
+        for (let i = 0; i < result.rows.length; i++) {
+          contacts = [...contacts, result.rows.item(i)];
+        }
+      });
+    });
+  }
+
+  function checkData() {
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts.phone_number == phonenumber) {
+        return false;
+      }
+      return true;
+    }
+  }
+
   async function addContact() {
     if (phonenumber == '') {
       Alert.alert(incompleteForm, missingPhone);
     } else if (name == '') {
       Alert.alert(incompleteForm, missingName);
+    } else if (!checkData()) {
+      Alert.alert(
+        language == 'en'
+          ? Translate.en.AddContact.contactAlreadyExists
+          : Translate.fr.AddContact.contactAlreadyExists,
+      );
     } else {
-      await db.transaction(async tx => {
-        tx.executeSql(
-          'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("' +
-            name +
-            '", "' +
-            surname +
-            '", "' +
-            phonenumber +
-            '", "' +
-            email +
-            '")',
-          [],
-          (tx, result) => {
-            console.log('New contact ' + result);
-          },
-        );
-      });
-      Alert.alert(title, addedSuccessfully);
-      const newPerson = {
-        emailAddresses: [
-          {
-            label: 'work',
-            email: email,
-          }
-        ],
-        phoneNumbers: [{
-          label: 'Hangouts',
-          number: phonenumber,
-        }],
-        familyName: surname,
-        givenName: name,
-      };
-      await Contacts.addContact(newPerson as Contact);
-      navigation.goBack();
+      if (!flag) {
+        await db.transaction(async tx => {
+          tx.executeSql(
+            'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("' +
+              name +
+              '", "' +
+              surname +
+              '", "' +
+              phonenumber +
+              '", "' +
+              email +
+              '")',
+            [],
+            (tx, result) => {
+              console.log('New contact ' + result);
+            },
+          );
+        });
+        Alert.alert(title, addedSuccessfully);
+        const newPerson = {
+          emailAddresses: [
+            {
+              label: 'work',
+              email: email,
+            },
+          ],
+          phoneNumbers: [
+            {
+              label: 'Hangouts',
+              number: phonenumber,
+            },
+          ],
+          familyName: surname,
+          givenName: name,
+        };
+        await Contacts.addContact(newPerson as Contact);
+        navigation.goBack();
+      }
     }
   }
 
   return (
     <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
-      <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>{title}</Text>
+      <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
+        {title}
+      </Text>
       <TextInput
         style={theme == 'dark' ? style.inputDark : style.inputLight}
         placeholderTextColor="grey"

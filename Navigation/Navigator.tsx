@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {NavigationContainer, DefaultTheme, DarkTheme,} from '@react-navigation/native';
-import HomeScreen from './Screens/HomeScreen';
 import AddContactScreen from './Screens/AddContactScreen';
 import ContactDetailsScreen from './Screens/ContactDetailsScreen';
 import SettingsScreen from './Screens/SettingsScreen';
@@ -16,7 +15,6 @@ const AppNavigator = () => {
   return (
       <NavigationContainer theme={DarkTheme} >
         <Navigator screenOptions={{headerShown: false}} initialRouteName={"Contacts"}>
-          <Screen name="Home" component={HomeScreen} />
           <Screen name="Contacts" component={ContactScreen} />
           <Screen name="Settings" component={SettingsScreen} />
           <Screen name="ContactDetails" component={ContactDetailsScreen} />

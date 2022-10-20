@@ -1,9 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, StyleSheet, Text, View, Alert, Pressable, Image} from 'react-native';
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  Pressable,
+  Image, PermissionsAndroid,
+} from "react-native";
 import SQLite from 'react-native-sqlite-storage';
 import {Translate} from '../../translation/translate';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-
+import Contacts, {Contact} from 'react-native-contacts';
 
 const db = SQLite.openDatabase(
   {
@@ -34,7 +42,6 @@ const ContactDetailsScreen = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log('useFocusEffect');
       getPref();
       setItems();
       return () => console.log('ContactDetailsScreen');
@@ -54,9 +61,8 @@ const ContactDetailsScreen = ({navigation, route}) => {
     Linking.openURL('tel:' + phone_number);
   }
 
-
   function sendMessage() {
-    Linking.openURL('sms:' + phone_number+'?body=');
+    Linking.openURL('sms:' + phone_number + '?body=');
   }
 
   const setItems = () => {
@@ -82,6 +88,90 @@ const ContactDetailsScreen = ({navigation, route}) => {
     }
   };
 
+  const EmailButton = () => {
+    if (email) {
+      return (
+        <Pressable
+          onPress={sendEmail}
+          style={
+            theme == 'dark' ? style.EmailButtonDark : style.EmailButtonLight
+          }>
+          <Text
+            style={
+              theme == 'dark'
+                ? style.EmailButtonTextDark
+                : style.EmailButtonTextLight
+            }>
+            {language == 'en'
+              ? Translate.en.Contacts.emailButton
+              : Translate.fr.Contacts.emailButton}
+          </Text>
+        </Pressable>
+      );
+    }
+  };
+
+  const SMSButton = () => {
+    return (
+      <Pressable
+        onPress={sendMessage}
+        style={theme == 'dark' ? style.SMSButtonDark : style.SMSButtonLight}>
+        <Text
+          style={
+            theme == 'dark' ? style.SMSButtonTextDark : style.SMSButtonTextLight
+          }>
+          {language == 'en'
+            ? Translate.en.Contacts.SMSButton
+            : Translate.fr.Contacts.SMSButton}
+        </Text>
+      </Pressable>
+    );
+  };
+
+  const CallButton = () => {
+    return (
+      <Pressable
+        onPress={call}
+        style={theme == 'dark' ? style.callButtonDark : style.callButtonLight}>
+        <Text
+          style={
+            theme == 'dark'
+              ? style.callButtonTextDark
+              : style.callButtonTextLight
+          }>
+          {language == 'en'
+            ? Translate.en.Contacts.callButton
+            : Translate.fr.Contacts.callButton}
+        </Text>
+      </Pressable>
+    );
+  };
+
+  function sendEmail() {
+    Linking.openURL('mailto:' + email);
+  }
+
+  async function requestContactsPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: 'Contacts permissions',
+          message: 'This application needs to get access to your contacts',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the contacts');
+      } else {
+        console.log('Contacts permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
   function remove() {
     Alert.alert(alertConfirmationTitle, alertConfirmationText, [
       {
@@ -93,7 +183,25 @@ const ContactDetailsScreen = ({navigation, route}) => {
                 route.params.phone_number +
                 '";',
               [],
-              (tx, result) => {
+              async () => {
+                const newPerson = {
+                  emailAddresses: [
+                    {
+                      label: 'personnal',
+                      email: email,
+                    },
+                  ],
+                  phoneNumbers: [
+                    {
+                      label: 'Hangouts',
+                      number: phone_number,
+                    },
+                  ],
+                  familyName: surname,
+                  givenName: name,
+                };
+                await requestContactsPermission();
+                await Contacts.deleteContact(newPerson as Contact);
                 Alert.alert('Confirmation', 'Contact has been deleted');
                 navigation.navigate('Contacts');
               },
@@ -155,34 +263,9 @@ const ContactDetailsScreen = ({navigation, route}) => {
           {deleteButton}
         </Text>
       </Pressable>
-      <Pressable
-        onPress={call}
-        style={
-          theme == 'dark' ? style.callButtonDark : style.callButtonLight
-        }>
-        <Text
-          style={
-            theme == 'dark'
-              ? style.callButtonTextDark
-              : style.callButtonTextLight
-          }>
-          Call
-        </Text>
-      </Pressable>
-      <Pressable
-        onPress={sendMessage}
-        style={
-          theme == 'dark' ? style.callButtonDark : style.callButtonLight
-        }>
-        <Text
-          style={
-            theme == 'dark'
-              ? style.callButtonTextDark
-              : style.callButtonTextLight
-          }>
-          Send Message
-        </Text>
-      </Pressable>
+      <CallButton />
+      <SMSButton />
+      <EmailButton />
     </View>
   );
 };
@@ -195,7 +278,7 @@ const style = StyleSheet.create({
 
   generalLight: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#F1F1F1',
   },
 
   nameDark: {
@@ -204,6 +287,8 @@ const style = StyleSheet.create({
     fontFamily: 'FuturaNewBold',
     textAlign: 'center',
     padding: 5,
+    marginLeft: 30,
+    marginRight: 30,
   },
 
   nameLight: {
@@ -252,20 +337,21 @@ const style = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
-    marginLeft: 50,
-    marginRight: 50,
+    marginLeft: 80,
+    marginRight: 80,
     backgroundColor: 'darkgrey',
     marginBottom: 10,
     marginTop: 30,
   },
+
   editButtonLight: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
-    marginLeft: 50,
-    marginRight: 50,
+    marginLeft: 80,
+    marginRight: 80,
     backgroundColor: 'darkgrey',
     marginBottom: 10,
     marginTop: 30,
@@ -278,7 +364,7 @@ const style = StyleSheet.create({
   },
 
   editButtonTextLight: {
-    color: 'black',
+    color: 'white',
     fontFamily: 'FuturaNewBold',
     textTransform: 'uppercase',
   },
@@ -289,9 +375,9 @@ const style = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
-    //  marginRight: 20,
-    marginLeft: 50,
-    marginRight: 50,
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
     backgroundColor: '#E96B60',
   },
 
@@ -301,9 +387,9 @@ const style = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
-    //  marginRight: 20,
-    marginLeft: 50,
-    marginRight: 50,
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
     backgroundColor: '#E96B60',
   },
 
@@ -314,7 +400,7 @@ const style = StyleSheet.create({
   },
 
   deleteButtonTextLight: {
-    color: 'black',
+    color: 'white',
     fontFamily: 'FuturaNewBold',
     textTransform: 'uppercase',
   },
@@ -325,10 +411,10 @@ const style = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
-    //  marginRight: 20,
-    marginLeft: 50,
-    marginRight: 50,
-    backgroundColor: 'grey',
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
+    backgroundColor: '#00babc',
   },
 
   callButtonLight: {
@@ -337,10 +423,10 @@ const style = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
-    //  marginRight: 20,
-    marginLeft: 50,
-    marginRight: 50,
-    backgroundColor: 'grey',
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
+    backgroundColor: '#00babc',
   },
 
   callButtonTextDark: {
@@ -350,7 +436,79 @@ const style = StyleSheet.create({
   },
 
   callButtonTextLight: {
-    color: 'black',
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    textTransform: 'uppercase',
+  },
+
+  SMSButtonDark: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
+    backgroundColor: '#04809F',
+  },
+
+  SMSButtonLight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
+    backgroundColor: '#04809F',
+  },
+
+  SMSButtonTextDark: {
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    textTransform: 'uppercase',
+  },
+
+  SMSButtonTextLight: {
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    textTransform: 'uppercase',
+  },
+
+  EmailButtonDark: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
+    backgroundColor: '#65646B',
+  },
+
+  EmailButtonLight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    marginLeft: 80,
+    marginRight: 80,
+    marginBottom: 10,
+    backgroundColor: '#65646B',
+  },
+
+  EmailButtonTextDark: {
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    textTransform: 'uppercase',
+  },
+
+  EmailButtonTextLight: {
+    color: 'white',
     fontFamily: 'FuturaNewBold',
     textTransform: 'uppercase',
   },
