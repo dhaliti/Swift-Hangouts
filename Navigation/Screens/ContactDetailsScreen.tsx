@@ -34,6 +34,7 @@ const ContactDetailsScreen = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      console.log('useFocusEffect');
       getPref();
       setItems();
       return () => console.log('ContactDetailsScreen');

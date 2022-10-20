@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Button,
   FlatList,
@@ -8,10 +8,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  AppState,
+  Alert,
 } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
+import {Translate} from '../../translation/translate';
 
 const db = SQLite.openDatabase(
   {
@@ -26,32 +30,97 @@ const db = SQLite.openDatabase(
 
 const ContactScreen = ({navigation, route}) => {
   const [contacts, setContacts] = useState([]);
-  const [table, setTable] = useState(false);
   const [language, setLanguage] = useState('');
   const [theme, setTheme] = useState('dark');
   const isFocused = useIsFocused();
+  const [seconds, setSeconds] = useState(0);
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   let init: any = [];
+  let startTimer: any;
+  let newSeconds = 0;
 
-  useEffect(() => {
-    return () => {
-      requestContactsPermission();
-      createTable();
-      createPref();
-      getPref();
-      getData();
-    };
-  }, [isFocused]);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
+  // useEffect(() => {
+  //   return () => {
+  //     requestContactsPermission();
   //     createTable();
   //     createPref();
   //     getPref();
   //     getData();
-  //     return () => console.log('Contacts');
-  //   }, [getPref, createTable, createPref, getData]),
-  // );
+  //   };
+  // }, [isFocused]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('callback');
+      getData();
+      createTable();
+      createPref();
+      getPref();
+      return () => console.log('Contacts');
+    }, [isFocused]),
+  );
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match('active') && nextAppState === 'background') {
+        console.log('start');
+        newSeconds = 0;
+        startCount();
+      } else if (
+        appState.current.match('background') &&
+        nextAppState === 'active'
+      ) {
+        endTimer(getPref);
+      }
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+    return () => {
+      console.log('Timer');
+      subscription.remove();
+    };
+  }, [isFocused]);
+
+  const stopTimer = () => {
+    BackgroundTimer.stopBackgroundTimer();
+    BackgroundTimer.clearInterval(startTimer);
+  };
+
+  async function endTimer() {
+    await resetTimer();
+  }
+
+  async function resetTimer() {
+    console.log('stop');
+    stopTimer();
+    language == 'en'
+      ? Alert.alert(Translate.en.Timer + newSeconds + ' seconds')
+      : Alert.alert(Translate.fr.Timer + newSeconds + ' secondes');
+    newSeconds = 0;
+  }
+
+  function getLanguage() {
+    return new Promise(async function (resolve, reject) {
+      await db.transaction(async tx => {
+        tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
+          console.log(result.rows.item(0).theme);
+          console.log(result.rows.item(0).language);
+          setLanguage(result.rows.item(0).language);
+          setTheme(result.rows.item(0).theme);
+        });
+      });
+    });
+  }
+
+  function startCount() {
+    startTimer = BackgroundTimer.runBackgroundTimer(() => {
+      console.log(newSeconds);
+      getPref();
+      newSeconds++;
+    }, 1000);
+  }
 
   async function requestContactsPermission() {
     try {
@@ -72,7 +141,7 @@ const ContactScreen = ({navigation, route}) => {
     } catch (err) {
       console.warn(err);
     }
-  };
+  }
 
   function test() {
     setContacts(init);
@@ -111,7 +180,7 @@ const ContactScreen = ({navigation, route}) => {
         [],
         (tx, result) => {
           console.log('Create Preferences');
-        }
+        },
       );
     });
     await db.transaction(async tx => {
@@ -120,7 +189,7 @@ const ContactScreen = ({navigation, route}) => {
         [],
         (tx, result) => {
           console.log('Inserted Preferences');
-        }
+        },
       );
     });
   }
@@ -170,7 +239,6 @@ const ContactScreen = ({navigation, route}) => {
 
   const addContact = () => navigation.navigate('AddContactScreen');
 
-
   return (
     <View style={theme == 'light' ? style.generalLight : style.generalDark}>
       <View
@@ -179,7 +247,9 @@ const ContactScreen = ({navigation, route}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={theme == 'light' ? style.titleLight : style.titleDark}>Contacts</Text>
+        <Text style={theme == 'light' ? style.titleLight : style.titleDark}>
+          Contacts
+        </Text>
         <TouchableOpacity
           style={{
             justifyContent: 'center',
@@ -203,18 +273,26 @@ const ContactScreen = ({navigation, route}) => {
         data={contacts}
         renderItem={({item}) => (
           <TouchableOpacity
-            style={theme == 'light' ? style.listElementLight : style.listElementDark}
+            style={
+              theme == 'light' ? style.listElementLight : style.listElementDark
+            }
             onPress={() => navigation.navigate('ContactDetails', item)}>
             <View
               style={{
                 display: 'flex',
                 flexDirection: 'row',
               }}>
-              <Text style={theme == 'light' ? style.initialsLight : style.initialsDark}>
+              <Text
+                style={
+                  theme == 'light' ? style.initialsLight : style.initialsDark
+                }>
                 {item.name.charAt(0).toUpperCase()}{' '}
                 {item.surname.charAt(0).toUpperCase()}
               </Text>
-              <Text style={theme == 'light' ? style.listTextLight : style.listTextDark}>
+              <Text
+                style={
+                  theme == 'light' ? style.listTextLight : style.listTextDark
+                }>
                 {item.name.charAt(0).toUpperCase()}
                 {item.name.slice(1)} {item.surname.charAt(0).toUpperCase()}
                 {item.surname.slice(1)}
@@ -372,7 +450,6 @@ const style = StyleSheet.create({
     marginRight: 15,
     //   left: 10,
   },
-
 });
 
 export default ContactScreen;

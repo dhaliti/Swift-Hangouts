@@ -3,6 +3,8 @@ apply from: file("../node_modules/@react-native-community/cli-platform-android/n
 include ':app'
 includeBuild('../node_modules/react-native-gradle-plugin')
 include ':react-native-sqlite-storage'
+include ':react-native-background-timer'
+project(':react-native-background-timer').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-timer/android')
 project(':react-native-sqlite-storage').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sqlite-storage/platforms/android') // react-native-sqlite-storage >= 4.0.0
 
 if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true") {

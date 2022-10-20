@@ -38,7 +38,8 @@ export const Translate = {
       missingPhone: 'Phone number missing for new contact',
       missingName: 'Name missing for new contact',
       addedSuccessfully : 'New Contact has been added successfully!',
-    }
+    },
+    Timer: 'Your application remained in the background for: ',
   },
 
   fr: {
@@ -82,5 +83,6 @@ export const Translate = {
       missingName: 'Votre nouveau contact doit avoir un prénom',
       addedSuccessfully : 'Votre nouveau contact a été enregistré avec succès !',
     },
+    Timer: "L'application est restée à l'arrière-plan pendant: ",
   },
 };
