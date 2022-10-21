@@ -25,7 +25,7 @@ const db = SQLite.openDatabase(
   },
 );
 
-const AddContactScreen = ({navigation}) => {
+const AddContactScreen = ({navigation, route}) => {
   const [namePlaceholder, setNamePlaceholder] = useState('');
   const [surnamePlaceholder, setSurnamePlaceholder] = useState('');
   const [phonenumberPlaceholder, setPhonenumberPlaceholder] = useState('');
@@ -42,17 +42,17 @@ const AddContactScreen = ({navigation}) => {
   const [surname, setSurname] = useState('');
   const [phonenumber, setPhonenumber] = useState('');
   const [email, setEmail] = useState('');
-  const [theme, setTheme] = useState('dark');
-  const [language, setLanguage] = useState('');
+  const [theme, setTheme] = useState(route.params.theme);
+  const [language, setLanguage] = useState(route.params.language);
   const [flag, setFlag] = useState(true);
 
   let contacts: any = [];
 
   useFocusEffect(
     React.useCallback(() => {
-      getPref();
-      setItems();
-      getData();
+      // getPref();
+       setItems();
+      // getData();
       return () => console.log('ContactDetailsScreen');
     }, [getPref, setItems, getData]),
   );
@@ -164,9 +164,11 @@ const AddContactScreen = ({navigation}) => {
 
   return (
     <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
-      <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
-        {title}
-      </Text>
+      <View style={theme == 'dark' ? style.headerDark : style.headerLight}>
+        <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
+          {title}
+        </Text>
+      </View>
       <TextInput
         style={theme == 'dark' ? style.inputDark : style.inputLight}
         placeholderTextColor="grey"
@@ -205,7 +207,7 @@ const AddContactScreen = ({navigation}) => {
 
 const style = StyleSheet.create({
   generalDark: {
-    backgroundColor: '#1A1919',
+    backgroundColor: 'white',
     flex: 1,
   },
 
@@ -214,18 +216,38 @@ const style = StyleSheet.create({
     flex: 1,
   },
 
+  headerDark: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#1A1919',
+    marginBottom: 20,
+    justifyContent: 'space-between',
+    elevation: 10,
+  },
+
+  headerLight: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#00babc',
+    marginBottom: 20,
+    justifyContent: 'space-between',
+    elevation: 10,
+  },
+
   titleDark: {
     fontSize: 30,
     color: 'white',
-    padding: 30,
     fontFamily: 'FuturaNewBold',
+    padding: 25,
   },
 
   titleLight: {
     fontSize: 30,
-    color: 'black',
-    padding: 30,
+    color: 'white',
     fontFamily: 'FuturaNewBold',
+    padding: 25,
   },
 
   inputDark: {
@@ -235,8 +257,8 @@ const style = StyleSheet.create({
     height: 50,
     fontFamily: 'FuturaNewMedium',
     fontSize: 18,
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 40,
+    marginRight: 40,
     padding: 10,
     paddingLeft: 15,
   },
@@ -248,9 +270,9 @@ const style = StyleSheet.create({
     height: 50,
     fontFamily: 'FuturaNewMedium',
     fontSize: 18,
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 10,
+    marginLeft: 35,
+    marginRight: 35,
+    padding: 15,
     paddingLeft: 15,
   },
 

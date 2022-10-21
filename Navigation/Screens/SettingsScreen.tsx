@@ -15,21 +15,21 @@ const db = SQLite.openDatabase(
   },
 );
 
-const SettingsScreen = () => {
-  const [theme, setTheme] = useState('dark');
-  const [language, setLanguage] = useState('');
+const SettingsScreen = ({navigation, route}) => {
+  const [theme, setTheme] = useState(route.params.theme);
+  const [language, setLanguage] = useState(route.params.language);
   const [lightThemeOn, setLightThemeOn] = useState(false);
   const [switchStatementLanguage, setSwitchStatementLanguage] = useState('');
   const [switchStatementTheme, setSwitchStatementTheme] = useState('');
   useState('');
   const [title, setTitle] = useState('');
   const [languageTitle, setLanguageTitle] = useState('');
-  const [themeTitle, setThemeTitle] = useState('dark');
+  const [themeTitle, setThemeTitle] = useState('');
   const isFocused = useIsFocused();
 
   useEffect(() => {
     return () => {
-      getPref();
+    //  getPref();
       setItems();
       setThemeLang();
       console.log('Settings');
@@ -149,19 +149,11 @@ const SettingsScreen = () => {
 
   return (
     <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
+      <View style={theme == 'dark' ? style.headerDark : style.headerLight}>
       <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
         {title}
       </Text>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={theme == 'dark' ? style.sectionDark : style.sectionLight}>
-          {languageTitle}
-        </Text>
+    </View>
         <Pressable
           style={
             theme == 'dark'
@@ -174,37 +166,13 @@ const SettingsScreen = () => {
               color: 'white',
               fontFamily: 'FuturaNewMedium',
               fontSize: 16,
+              textAlign: 'center',
             }}>
             {switchStatementLanguage}
           </Text>
         </Pressable>
 
-        {/* <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginRight: 30,
-            }}>
-            <Text style={style.optionsDark}>Fr</Text>
-            <Switch
-              style={style.switchDark}
-              value={lightThemeOn}
-              onValueChange={changeTheme}
-            />
-            <Text style={style.optionsDark}>En</Text>
-          </View>*/}
-      </View>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={theme == 'dark' ? style.sectionDark : style.sectionLight}>
-          {themeTitle}
-        </Text>
+
         <Pressable
           style={
             theme == 'dark' ? style.changeThemeDark : style.changeThemeLight
@@ -215,11 +183,18 @@ const SettingsScreen = () => {
               color: 'white',
               fontFamily: 'FuturaNewMedium',
               fontSize: 16,
+              textAlign: 'center',
             }}>
             {switchStatementTheme}
           </Text>
         </Pressable>
-        <View />
+      <View style={{marginTop: 70,}}>
+        <Text style={style.creditsTitle}>Crédits</Text>
+        <Text style={style.credits}>
+          Lorem ipsum dolor sit amet. Ea omnis nihil ut nihil corporis est minus delectus. Aut sapiente deleniti qui quas debitis est veniam consequatur vel impedit quos! Ad animi officia a asperiores ipsam quo quidem aperiam ut expedita odit et facere sunt aut culpa nihil. Rem minima eveniet aut eligendi voluptas eum porro rerum sit rerum fuga qui quidem rerum.
+
+          Eum culpa cupiditate sed reprehenderit autem qui nesciunt dolorem qui placeat quia in ullam galisum. Aut architecto eveniet et quia saepe est deserunt totam id quibusdam iste est quod aliquid. Ut veritatis facilis aut sunt voluptatibus aut Quis quidem quo consequatur officiis et officia repudiandae.
+        </Text>
       </View>
     </View>
   );
@@ -229,26 +204,49 @@ export default SettingsScreen;
 
 const style = StyleSheet.create({
   generalDark: {
-    backgroundColor: '#1A1919',
+    backgroundColor: 'white',
     flex: 1,
   },
+
   generalLight: {
     backgroundColor: 'white',
     flex: 1,
   },
+
+  headerDark: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#1A1919',
+    marginBottom: 60,
+    justifyContent: 'space-between',
+    elevation: 10,
+  },
+
+  headerLight: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#00babc',
+    marginBottom: 60,
+    justifyContent: 'space-between',
+    elevation: 10,
+  },
+
   titleDark: {
-    fontSize: 40,
+    fontSize: 30,
     color: 'white',
     fontFamily: 'FuturaNewBold',
-    padding: 30,
+    padding: 25,
   },
 
   titleLight: {
-    fontSize: 40,
-    color: 'black',
+    fontSize: 30,
+    color: 'white',
     fontFamily: 'FuturaNewBold',
-    padding: 30,
+    padding: 25,
   },
+
 
   sectionDark: {
     color: 'white',
@@ -290,25 +288,52 @@ const style = StyleSheet.create({
     backgroundColor: '#00babc',
     padding: 15,
     borderRadius: 4,
-    marginRight: 30,
+    marginRight: 90,
+    marginLeft: 90,
+    marginBottom: 10,
+
   },
 
   changeLanguageLight: {
     backgroundColor: '#00babc',
     padding: 15,
     borderRadius: 4,
-    marginRight: 30,
+    marginRight: 90,
+    marginLeft: 90,
+    marginBottom: 10,
   },
 
   changeThemeDark: {
     backgroundColor: '#00babc',
     padding: 15,
     borderRadius: 4,
+    marginRight: 90,
+    marginLeft: 90,
+    marginBottom: 10,
   },
 
   changeThemeLight: {
     backgroundColor: '#00babc',
     padding: 15,
     borderRadius: 4,
+    marginRight: 90,
+    marginLeft: 90,
+    marginBottom: 10,
+  },
+
+  creditsTitle:{
+    fontFamily: 'FuturaNewBold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    marginBottom: 10,
+    color: 'grey',
+  },
+  credits: {
+    marginLeft: 40,
+    marginRight : 40,
+    textAlign:'center',
+    color: 'grey',
+
   },
 });

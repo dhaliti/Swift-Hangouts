@@ -16,6 +16,9 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import {Translate} from '../../translation/translate';
+import { AppBar, HStack, Icon, IconButton } from "@react-native-material/core";
+
+
 
 const db = SQLite.openDatabase(
   {
@@ -192,18 +195,16 @@ const ContactScreen = ({navigation, route}) => {
     });
   }
 
-  const goToSettings = () => navigation.navigate('Settings');
+  const goToSettings = () => navigation.navigate('Settings', {theme: theme, language: language});
 
-  const addContact = () => navigation.navigate('AddContactScreen');
+  const addContact = () => navigation.navigate('AddContactScreen', {theme: theme, language: language});
 
   return (
     <View style={theme == 'light' ? style.generalLight : style.generalDark}>
       <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
+        style={
+          theme == 'dark' ? style.headerDark : style.headerLight
+        }>
         <Text style={theme == 'light' ? style.titleLight : style.titleDark}>
           Contacts
         </Text>
@@ -214,18 +215,25 @@ const ContactScreen = ({navigation, route}) => {
           onPress={goToSettings}>
           <Image
             style={{
-              width: 25,
-              height: 25,
+              width: 27,
+              height: 27,
               marginRight: 30,
             }}
             source={
-              theme == 'dark'
-                ? require('../../images/settingsDark.png')
-                : require('../../images/settingsLight.png')
+                require('../../images/settings.png')
             }
           />
         </TouchableOpacity>
       </View>
+{/*      <AppBar
+        title="Screen title"
+        trailing={props => (
+          <IconButton
+            icon={props => <Image source={require('../../images/settingsDark.png')} />}
+            {...props}
+          />
+        )}
+      />*/}
       <FlatList
         data={contacts}
         renderItem={({item}) => (
@@ -239,13 +247,19 @@ const ContactScreen = ({navigation, route}) => {
                 display: 'flex',
                 flexDirection: 'row',
               }}>
-              <Text
+{/*              <Text
                 style={
                   theme == 'light' ? style.initialsLight : style.initialsDark
                 }>
                 {item.name.charAt(0).toUpperCase()}{' '}
                 {item.surname.charAt(0).toUpperCase()}
-              </Text>
+              </Text>*/}
+              <Image
+                style={
+                  theme == 'light' ? style.initialsLight : style.initialsDark
+                }
+                source={require('../../images/default_profile.png')}
+              />
               <Text
                 style={
                   theme == 'light' ? style.listTextLight : style.listTextDark
@@ -268,7 +282,7 @@ const ContactScreen = ({navigation, route}) => {
 
 const style = StyleSheet.create({
   generalDark: {
-    backgroundColor: '#1A1919',
+    backgroundColor: 'white',
     flex: 1,
   },
 
@@ -276,48 +290,64 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
+
+  headerDark: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#1A1919',
+    marginBottom: 20,
+    justifyContent: 'space-between',
+    elevation: 10,
+  },
+
+  headerLight: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#00babc',
+    marginBottom: 20,
+    justifyContent: 'space-between',
+    elevation: 10,
+  },
+
   titleDark: {
-    fontSize: 40,
+    fontSize: 30,
     color: 'white',
     fontFamily: 'FuturaNewBold',
-    padding: 30,
+    padding: 25,
   },
 
   titleLight: {
-    fontSize: 40,
-    color: 'black',
+    fontSize: 30,
+    color: 'white',
     fontFamily: 'FuturaNewBold',
-    padding: 30,
+    padding: 25,
   },
 
   listElementDark: {
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
     marginBottom: 5,
     marginLeft: 20,
     marginRight: 20,
-    fontWeight: 'bold',
-    //height: 50,
     alignSelf: 'auto',
     padding: 12,
   },
 
   listElementLight: {
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 1,
     borderBottomColor: 'black',
     marginBottom: 5,
     marginLeft: 20,
     marginRight: 20,
-    fontWeight: 'bold',
-    //height: 50,
     alignSelf: 'auto',
     padding: 12,
   },
 
   listTextDark: {
-    color: 'white',
+    color: 'black',
     textAlignVertical: 'auto',
-    fontSize: 16,
     padding: 5,
     fontFamily: 'FuturaNewMedium',
     fontSize: 18,
@@ -326,9 +356,8 @@ const style = StyleSheet.create({
   listTextLight: {
     color: 'black',
     textAlignVertical: 'auto',
-    fontSize: 16,
     padding: 5,
-    fontFamily: 'FuturaNewMedium',
+   fontFamily: 'FuturaNewMedium',
     fontSize: 18,
   },
 
@@ -368,13 +397,10 @@ const style = StyleSheet.create({
     fontFamily: 'FuturaNewBold',
     borderRadius: 100,
     color: 'white',
-    borderColor: 'white',
+    borderColor: 'black',
     borderWidth: 1,
-    // marginTop: 100,
-    // marginBottom: 20,
     bottom: 5,
     marginRight: 15,
-    //   left: 10,
   },
 
   initialsLight: {
@@ -388,11 +414,8 @@ const style = StyleSheet.create({
     color: 'black',
     borderColor: 'black',
     borderWidth: 2,
-    // marginTop: 100,
-    // marginBottom: 20,
     bottom: 5,
     marginRight: 15,
-    //   left: 10,
   },
 });
 
