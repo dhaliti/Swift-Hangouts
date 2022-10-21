@@ -24,7 +24,7 @@ const SettingsScreen = () => {
   useState('');
   const [title, setTitle] = useState('');
   const [languageTitle, setLanguageTitle] = useState('');
-  const [themeTitle, setThemeTitle] = useState('');
+  const [themeTitle, setThemeTitle] = useState('dark');
   const isFocused = useIsFocused();
 
   useEffect(() => {

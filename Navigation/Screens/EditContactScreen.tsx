@@ -8,8 +8,9 @@ import {
   Alert,
 } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { Translate } from "../../translation/translate";
+import Contacts, {Contact} from "react-native-contacts";
 
 const db = SQLite.openDatabase(
   {
@@ -42,13 +43,17 @@ const EditContactScreen = ({navigation, route}) => {
   const [phonenumber, setPhonenumber] = useState(route.params.phone_number);
   const [theme, setTheme] = useState('dark');
   const [language, setLanguage] = useState('');
+  const [phoneContacts, setPhoneContacts] = useState([Contacts]);
+
+  const isFocused = useIsFocused();
 
   useFocusEffect(
     React.useCallback(() => {
       getPref();
+      getContacts();
       setItems();
       return () => console.log('EditScreen');
-    }, [getPref]),
+    }, [isFocused]),
   );
 
   const setItems = () => {
@@ -87,6 +92,14 @@ const EditContactScreen = ({navigation, route}) => {
         setTheme(result.rows.item(0).theme);
       });
     });
+  }
+
+  function getContacts() {
+    Contacts.getAll().then(contact => {
+      setPhoneContacts(contact);
+      console.log(phoneContacts);
+    });
+
   }
 
   async function editContact() {

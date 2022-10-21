@@ -36,7 +36,7 @@ const ContactDetailsScreen = ({navigation, route}) => {
   const [editButton, setEditButton] = useState('');
   const [deleteButton, setDeleteButton] = useState('');
   const [language, setLanguage] = useState('');
-  const [theme, setTheme] = useState('');
+  const [theme, setTheme] = useState('dark');
 
   const isFocused = useIsFocused();
 
@@ -183,26 +183,16 @@ const ContactDetailsScreen = ({navigation, route}) => {
                 route.params.phone_number +
                 '";',
               [],
-              async () => {
-                const newPerson = {
-                  emailAddresses: [
-                    {
-                      label: 'personnal',
-                      email: email,
-                    },
-                  ],
-                  phoneNumbers: [
-                    {
-                      label: 'Hangouts',
-                      number: phone_number,
-                    },
-                  ],
-                  familyName: surname,
-                  givenName: name,
-                };
-                await requestContactsPermission();
-                await Contacts.deleteContact(newPerson as Contact);
-                Alert.alert('Confirmation', 'Contact has been deleted');
+              () => {
+                if (language == 'en')
+                  Alert.alert(
+                    'Confirmation',
+                    Translate.en.ContactDetails.alertRemovalConfirmed);
+                else
+                  Alert.alert(
+                    'Confirmation',
+                    Translate.fr.ContactDetails.alertRemovalConfirmed,
+                  );
                 navigation.navigate('Contacts');
               },
             );
