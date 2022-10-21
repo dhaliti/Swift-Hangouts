@@ -148,6 +148,7 @@ const ContactScreen = ({navigation, route}) => {
           init = [...init, result.rows.item(i)];
         }
         setContacts(init);
+        console.log(result.rows.item(0));
       });
     });
   }
@@ -182,7 +183,7 @@ const ContactScreen = ({navigation, route}) => {
   async function createTable() {
     await db.transaction(async tx => {
       await tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30), email VARCHAR(30));',
+        'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30),  email VARCHAR(30));',
         [],
         (tx, result) => {
           console.log('Create Contact');
@@ -260,6 +261,7 @@ const ContactScreen = ({navigation, route}) => {
       <Pressable style={style.addButton} onPress={addContact}>
         <Text style={style.plusSign}>+</Text>
       </Pressable>
+      <Button title={"Drop Table"} onPress={dropTable}/>
     </View>
   );
 };

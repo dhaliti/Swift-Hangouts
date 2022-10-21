@@ -38,9 +38,11 @@ const EditContactScreen = ({navigation, route}) => {
   const [editedSuccessfully, setEditedSuccessfully] = useState('');
 
   const [name, setName] = useState(route.params.name);
+  const [contactID, setContactID] = useState(route.params.id);
   const [surname, setSurname] = useState(route.params.surname);
   const [email, setEmail] = useState(route.params.email);
   const [phonenumber, setPhonenumber] = useState(route.params.phone_number);
+  const [id, setId] = useState();
   const [theme, setTheme] = useState('dark');
   const [language, setLanguage] = useState('');
   const [phoneContacts, setPhoneContacts] = useState([Contacts]);
@@ -118,9 +120,13 @@ const EditContactScreen = ({navigation, route}) => {
             email +
             '", phone_number="' +
             phonenumber +
-            '" WHERE phone_number="' + phonenumber + '";',
+            '" WHERE id="' + contactID + '";',
           [],
           (tx, result) => {
+            let editContact;
+            // for (let i = 0; i < phoneContacts.length; i++) {
+            //   if (phoneContacts[i].givenName)
+            // }
             Alert.alert(title, editedSuccessfully);
             navigation.navigate('Contacts');
           },
