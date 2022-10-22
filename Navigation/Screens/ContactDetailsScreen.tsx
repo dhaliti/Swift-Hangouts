@@ -44,20 +44,11 @@ const ContactDetailsScreen = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      //  getPref();
       setItems();
       return () => console.log('ContactDetailsScreen');
-    }, [getPref, setItems]),
+    }, [setItems]),
   );
 
-  async function getPref() {
-    await db.transaction(async tx => {
-      tx.executeSql('SELECT * from Preferences', [], (tx, result) => {
-        setLanguage(result.rows.item(0).language);
-        setTheme(result.rows.item(0).theme);
-      });
-    });
-  }
 
   function call() {
     Linking.openURL('tel:' + phone_number);
