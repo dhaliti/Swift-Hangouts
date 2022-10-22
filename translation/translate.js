@@ -46,6 +46,8 @@ export const Translate = {
       contactAlreadyExists: 'This phone number is already used by one of your contacts'
     },
     Timer: 'Your application remained in the background for: ',
+    Credits:
+      'This app has been made as part of the School 42 curriculum.\nIt uses TypeScript and React Native to generate a cross-platform code base.',
   },
 
   fr: {

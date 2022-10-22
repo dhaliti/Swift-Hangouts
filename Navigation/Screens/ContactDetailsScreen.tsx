@@ -192,6 +192,7 @@ const ContactDetailsScreen = ({navigation, route}) => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
+            marginRight: 30,
           }}>
           <Pressable style={{marginRight: 30}} onPress={editContact}>
             <Image
@@ -229,11 +230,11 @@ const ContactDetailsScreen = ({navigation, route}) => {
         style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           marginLeft: 110,
           alignContent: 'center',
           marginRight: 110,
-          marginTop: 30,
+          marginTop: 50,
         }}>
         <CallButton/>
         <SMSButton/>
@@ -260,8 +261,8 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     height: 90,
     backgroundColor: '#1A1919',
+    marginBottom: 20,
     justifyContent: 'space-between',
-    paddingRight: 30,
     alignItems: 'center',
     elevation: 10,
   },
@@ -271,8 +272,8 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     height: 90,
     backgroundColor: '#00babc',
+    marginBottom: 20,
     justifyContent: 'space-between',
-    paddingRight: 30,
     alignItems: 'center',
     elevation: 10,
   },
@@ -340,188 +341,188 @@ const style = StyleSheet.create({
     fontSize: 18,
     padding: 5,
   },
-
-  editButtonDark: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    backgroundColor: 'darkgrey',
-    marginBottom: 10,
-    marginTop: 30,
-  },
-
-  editButtonLight: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    backgroundColor: 'darkgrey',
-    marginBottom: 10,
-    marginTop: 30,
-  },
-
-  editButtonTextDark: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  editButtonTextLight: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  deleteButtonDark: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#E96B60',
-  },
-
-  deleteButtonLight: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#E96B60',
-  },
-
-  deleteButtonTextDark: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  deleteButtonTextLight: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  callButtonDark: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#00babc',
-  },
-
-  callButtonLight: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#00babc',
-  },
-
-  callButtonTextDark: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  callButtonTextLight: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  SMSButtonDark: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#04809F',
-  },
-
-  SMSButtonLight: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#04809F',
-  },
-
-  SMSButtonTextDark: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  SMSButtonTextLight: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  EmailButtonDark: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#65646B',
-  },
-
-  EmailButtonLight: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 10,
-    backgroundColor: '#65646B',
-  },
-
-  EmailButtonTextDark: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
-
-  EmailButtonTextLight: {
-    color: 'white',
-    fontFamily: 'FuturaNewBold',
-    textTransform: 'uppercase',
-  },
+  //
+  // editButtonDark: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   backgroundColor: 'darkgrey',
+  //   marginBottom: 10,
+  //   marginTop: 30,
+  // },
+  //
+  // editButtonLight: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   backgroundColor: 'darkgrey',
+  //   marginBottom: 10,
+  //   marginTop: 30,
+  // },
+  //
+  // editButtonTextDark: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // editButtonTextLight: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // deleteButtonDark: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#E96B60',
+  // },
+  //
+  // deleteButtonLight: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#E96B60',
+  // },
+  //
+  // deleteButtonTextDark: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // deleteButtonTextLight: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // callButtonDark: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#00babc',
+  // },
+  //
+  // callButtonLight: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#00babc',
+  // },
+  //
+  // callButtonTextDark: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // callButtonTextLight: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // SMSButtonDark: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#04809F',
+  // },
+  //
+  // SMSButtonLight: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#04809F',
+  // },
+  //
+  // SMSButtonTextDark: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // SMSButtonTextLight: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // EmailButtonDark: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#65646B',
+  // },
+  //
+  // EmailButtonLight: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 5,
+  //   marginLeft: 80,
+  //   marginRight: 80,
+  //   marginBottom: 10,
+  //   backgroundColor: '#65646B',
+  // },
+  //
+  // EmailButtonTextDark: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
+  //
+  // EmailButtonTextLight: {
+  //   color: 'white',
+  //   fontFamily: 'FuturaNewBold',
+  //   textTransform: 'uppercase',
+  // },
 
   profile: {
     alignSelf: 'center',

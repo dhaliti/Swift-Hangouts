@@ -189,11 +189,9 @@ const SettingsScreen = ({navigation, route}) => {
           </Text>
         </Pressable>
       <View style={{marginTop: 70,}}>
-        <Text style={style.creditsTitle}>Crédits</Text>
+        <Text style={style.creditsTitle}>{language == 'en' ? "Credits" : "Crédits"}</Text>
         <Text style={style.credits}>
-          Lorem ipsum dolor sit amet. Ea omnis nihil ut nihil corporis est minus delectus. Aut sapiente deleniti qui quas debitis est veniam consequatur vel impedit quos! Ad animi officia a asperiores ipsam quo quidem aperiam ut expedita odit et facere sunt aut culpa nihil. Rem minima eveniet aut eligendi voluptas eum porro rerum sit rerum fuga qui quidem rerum.
-
-          Eum culpa cupiditate sed reprehenderit autem qui nesciunt dolorem qui placeat quia in ullam galisum. Aut architecto eveniet et quia saepe est deserunt totam id quibusdam iste est quod aliquid. Ut veritatis facilis aut sunt voluptatibus aut Quis quidem quo consequatur officiis et officia repudiandae.
+          {language == 'en' ? Translate.en.Credits : Translate.fr.Credits}
         </Text>
       </View>
     </View>
