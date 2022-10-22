@@ -287,47 +287,7 @@ const ContactDetailsScreen = ({navigation, route}) => {
           />
         </Pressable>
       </View>
-      {/*<View style={{*/}
-      {/*  display: 'flex',*/}
-      {/*  flexDirection: 'row',*/}
-      {/*  justifyContent: 'space-between',*/}
-      {/*  marginLeft: 50,*/}
-      {/*  marginRight: 50,*/}
-      {/*}}>*/}
-      {/*  <Text style={style.buttonText}>Call</Text>*/}
-      {/*  <Text style={style.buttonText}>Send SMS</Text>*/}
-      {/*  <Text style={style.buttonText}>Send Email</Text>*/}
 
-      {/*</View>*/}
-      {/*<Pressable*/}
-      {/*  onPress={editContact}*/}
-      {/*  style={theme == 'dark' ? style.editButtonDark : style.editButtonLight}>*/}
-      {/*  <Text*/}
-      {/*    style={*/}
-      {/*      theme == 'dark'*/}
-      {/*        ? style.editButtonTextDark*/}
-      {/*        : style.editButtonTextLight*/}
-      {/*    }>*/}
-      {/*    {editButton}*/}
-      {/*  </Text>*/}
-      {/*</Pressable>*/}
-      {/*<Pressable*/}
-      {/*  onPress={remove}*/}
-      {/*  style={*/}
-      {/*    theme == 'dark' ? style.deleteButtonDark : style.deleteButtonLight*/}
-      {/*  }>*/}
-      {/*  <Text*/}
-      {/*    style={*/}
-      {/*      theme == 'dark'*/}
-      {/*        ? style.deleteButtonTextDark*/}
-      {/*        : style.deleteButtonTextLight*/}
-      {/*    }>*/}
-      {/*    {deleteButton}*/}
-      {/*  </Text>*/}
-      {/*</Pressable>*/}
-      {/*<CallButton />*/}
-      {/*<SMSButton />*/}
-      {/*<EmailButton />*/}
     </View>
   );
 };

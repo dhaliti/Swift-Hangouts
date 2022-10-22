@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,7 @@ import {
 import SQLite from 'react-native-sqlite-storage';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {Translate} from '../../translation/translate';
-import Contacts, {Contact} from 'react-native-contacts';
+import Contacts from 'react-native-contacts';
 
 const db = SQLite.openDatabase(
   {
