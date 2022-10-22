@@ -81,64 +81,40 @@ const ContactDetailsScreen = ({navigation, route}) => {
     }
   };
 
-  // const EmailButton = () => {
-  //   if (email) {
-  //     return (
-  //       <Pressable
-  //         onPress={sendEmail}
-  //         style={
-  //           theme == 'dark' ? style.EmailButtonDark : style.EmailButtonLight
-  //         }>
-  //         <Text
-  //           style={
-  //             theme == 'dark'
-  //               ? style.EmailButtonTextDark
-  //               : style.EmailButtonTextLight
-  //           }>
-  //           {language == 'en'
-  //             ? Translate.en.Contacts.emailButton
-  //             : Translate.fr.Contacts.emailButton}
-  //         </Text>
-  //       </Pressable>
-  //     );
-  //   }
-  // };
+  const EmailButton = () => {
+    if (email) {
+      return (
+        <Pressable onPress={sendEmail}>
+          <Image
+            style={style.titleIcon}
+            source={require('../../images/email.png')}
+          />
+        </Pressable>
+      );
+    }
+  };
 
-  // const SMSButton = () => {
-  //   return (
-  //     <Pressable
-  //       onPress={sendMessage}
-  //       style={theme == 'dark' ? style.SMSButtonDark : style.SMSButtonLight}>
-  //       <Text
-  //         style={
-  //           theme == 'dark' ? style.SMSButtonTextDark : style.SMSButtonTextLight
-  //         }>
-  //         {language == 'en'
-  //           ? Translate.en.Contacts.SMSButton
-  //           : Translate.fr.Contacts.SMSButton}
-  //       </Text>
-  //     </Pressable>
-  //   );
-  // };
+  const SMSButton = () => {
+    return (
+      <Pressable onPress={sendMessage}>
+        <Image
+          style={style.titleIcon}
+          source={require('../../images/message.png')}
+        />
+      </Pressable>
+    );
+  };
   //
-  // const CallButton = () => {
-  //   return (
-  //     <Pressable
-  //       onPress={call}
-  //       style={theme == 'dark' ? style.callButtonDark : style.callButtonLight}>
-  //       <Text
-  //         style={
-  //           theme == 'dark'
-  //             ? style.callButtonTextDark
-  //             : style.callButtonTextLight
-  //         }>
-  //         {language == 'en'
-  //           ? Translate.en.Contacts.callButton
-  //           : Translate.fr.Contacts.callButton}
-  //       </Text>
-  //     </Pressable>
-  //   );
-  // };
+  const CallButton = () => {
+    return (
+      <Pressable style={style.iconButtons} onPress={call}>
+        <Image
+          style={style.titleIcon}
+          source={require('../../images/call.png')}
+        />
+      </Pressable>
+    );
+  };
 
   function sendEmail() {
     Linking.openURL('mailto:' + email);
@@ -259,24 +235,9 @@ const ContactDetailsScreen = ({navigation, route}) => {
           marginRight: 110,
           marginTop: 30,
         }}>
-        <Pressable style={style.iconButtons} onPress={call}>
-          <Image
-            style={style.titleIcon}
-            source={require('../../images/call.png')}
-          />
-        </Pressable>
-        <Pressable onPress={sendMessage}>
-          <Image
-            style={style.titleIcon}
-            source={require('../../images/message.png')}
-          />
-        </Pressable>
-        <Pressable onPress={sendEmail}>
-          <Image
-            style={style.titleIcon}
-            source={require('../../images/email.png')}
-          />
-        </Pressable>
+        <CallButton/>
+        <SMSButton/>
+       <EmailButton/>
       </View>
 
     </View>
