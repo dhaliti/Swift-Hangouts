@@ -6,8 +6,9 @@ import {
   View,
   Alert,
   Pressable,
-  Image, PermissionsAndroid,
-} from "react-native";
+  Image,
+  PermissionsAndroid,
+} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 import {Translate} from '../../translation/translate';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
@@ -31,18 +32,19 @@ const ContactDetailsScreen = ({navigation, route}) => {
     route.params.surname.slice(1);
   const phone_number = route.params.phone_number.replace(/\d{2}(?=.)/g, '$& ');
   const email = route.params.email;
+  const student = route.params.student;
   const [alertConfirmationTitle, setAlertConfirmationTitle] = useState('');
   const [alertConfirmationText, setAlertConfirmationText] = useState('');
   const [editButton, setEditButton] = useState('');
   const [deleteButton, setDeleteButton] = useState('');
-  const [language, setLanguage] = useState('');
-  const [theme, setTheme] = useState('dark');
+  const language = route.params.language;
+  const theme = route.params.theme;
 
   const isFocused = useIsFocused();
 
   useFocusEffect(
     React.useCallback(() => {
-      getPref();
+      //  getPref();
       setItems();
       return () => console.log('ContactDetailsScreen');
     }, [getPref, setItems]),
@@ -184,15 +186,17 @@ const ContactDetailsScreen = ({navigation, route}) => {
                 '";',
               [],
               () => {
-                if (language == 'en')
+                if (language == 'en') {
                   Alert.alert(
                     'Confirmation',
-                    Translate.en.ContactDetails.alertRemovalConfirmed);
-                else
+                    Translate.en.ContactDetails.alertRemovalConfirmed,
+                  );
+                } else {
                   Alert.alert(
                     'Confirmation',
                     Translate.fr.ContactDetails.alertRemovalConfirmed,
                   );
+                }
                 navigation.navigate('Contacts');
               },
             );
@@ -212,13 +216,39 @@ const ContactDetailsScreen = ({navigation, route}) => {
 
   return (
     <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
-      <Text style={theme == 'dark' ? style.initialsDark : style.initialsLight}>
-        {name.charAt(0)} {surname.charAt(0)}
-      </Text>
-      <Text style={{color:'black'}}>{route.params.student}</Text>
-      <Text style={theme == 'dark' ? style.nameDark : style.nameLight}>
-        {name} {surname}
-      </Text>
+      <View style={theme == 'dark' ? style.headerDark : style.headerLight}>
+        <Text style={theme == 'dark' ? style.nameDark : style.nameLight}>
+          {name} {surname}
+        </Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Pressable style={{marginRight: 30}} onPress={editContact}>
+            <Image
+              style={style.titleIcon}
+              source={require('../../images/edit.png')}
+            />
+          </Pressable>
+          <Pressable onPress={remove}>
+            <Image
+              style={style.titleIcon}
+              source={require('../../images/delete.png')}
+            />
+          </Pressable>
+        </View>
+      </View>
+      <Image
+        style={style.profile}
+        source={
+          student == 0
+            ? require('../../images/42ProfileDetails.png')
+            : require('../../images/default_profile.png')
+        }
+      />
+      <Text style={{color: 'black'}}>{route.params.student}</Text>
       <Text
         style={
           theme == 'dark' ? style.phone_numberDark : style.phone_numberLight
@@ -228,52 +258,129 @@ const ContactDetailsScreen = ({navigation, route}) => {
       <Text style={theme == 'dark' ? style.emailDark : style.emailLight}>
         {email}
       </Text>
-      <Pressable
-        onPress={editContact}
-        style={theme == 'dark' ? style.editButtonDark : style.editButtonLight}>
-        <Text
-          style={
-            theme == 'dark'
-              ? style.editButtonTextDark
-              : style.editButtonTextLight
-          }>
-          {editButton}
-        </Text>
-      </Pressable>
-      <Pressable
-        onPress={remove}
-        style={
-          theme == 'dark' ? style.deleteButtonDark : style.deleteButtonLight
-        }>
-        <Text
-          style={
-            theme == 'dark'
-              ? style.deleteButtonTextDark
-              : style.deleteButtonTextLight
-          }>
-          {deleteButton}
-        </Text>
-      </Pressable>
-      <CallButton />
-      <SMSButton />
-      <EmailButton />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginLeft: 110,
+          alignContent: 'center',
+          marginRight: 110,
+          marginTop: 30,
+        }}>
+        <Pressable style={style.iconButtons} onPress={call}>
+          <Image
+            style={style.titleIcon}
+            source={require('../../images/call.png')}
+          />
+        </Pressable>
+        <Pressable onPress={sendMessage}>
+          <Image
+            style={style.titleIcon}
+            source={require('../../images/message.png')}
+          />
+        </Pressable>
+        <Pressable onPress={sendEmail}>
+          <Image
+            style={style.titleIcon}
+            source={require('../../images/email.png')}
+          />
+        </Pressable>
+      </View>
+      {/*<View style={{*/}
+      {/*  display: 'flex',*/}
+      {/*  flexDirection: 'row',*/}
+      {/*  justifyContent: 'space-between',*/}
+      {/*  marginLeft: 50,*/}
+      {/*  marginRight: 50,*/}
+      {/*}}>*/}
+      {/*  <Text style={style.buttonText}>Call</Text>*/}
+      {/*  <Text style={style.buttonText}>Send SMS</Text>*/}
+      {/*  <Text style={style.buttonText}>Send Email</Text>*/}
+
+      {/*</View>*/}
+      {/*<Pressable*/}
+      {/*  onPress={editContact}*/}
+      {/*  style={theme == 'dark' ? style.editButtonDark : style.editButtonLight}>*/}
+      {/*  <Text*/}
+      {/*    style={*/}
+      {/*      theme == 'dark'*/}
+      {/*        ? style.editButtonTextDark*/}
+      {/*        : style.editButtonTextLight*/}
+      {/*    }>*/}
+      {/*    {editButton}*/}
+      {/*  </Text>*/}
+      {/*</Pressable>*/}
+      {/*<Pressable*/}
+      {/*  onPress={remove}*/}
+      {/*  style={*/}
+      {/*    theme == 'dark' ? style.deleteButtonDark : style.deleteButtonLight*/}
+      {/*  }>*/}
+      {/*  <Text*/}
+      {/*    style={*/}
+      {/*      theme == 'dark'*/}
+      {/*        ? style.deleteButtonTextDark*/}
+      {/*        : style.deleteButtonTextLight*/}
+      {/*    }>*/}
+      {/*    {deleteButton}*/}
+      {/*  </Text>*/}
+      {/*</Pressable>*/}
+      {/*<CallButton />*/}
+      {/*<SMSButton />*/}
+      {/*<EmailButton />*/}
     </View>
   );
 };
 
 const style = StyleSheet.create({
   generalDark: {
+    backgroundColor: 'white',
     flex: 1,
-    backgroundColor: '#1A1919',
   },
 
   generalLight: {
+    backgroundColor: 'white',
     flex: 1,
-    backgroundColor: '#F1F1F1',
+  },
+
+  headerDark: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#1A1919',
+    justifyContent: 'space-between',
+    paddingRight: 30,
+    alignItems: 'center',
+    elevation: 10,
+  },
+
+  headerLight: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 90,
+    backgroundColor: '#00babc',
+    justifyContent: 'space-between',
+    paddingRight: 30,
+    alignItems: 'center',
+    elevation: 10,
+  },
+
+  titleDark: {
+    fontSize: 30,
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    padding: 25,
+  },
+
+  titleLight: {
+    fontSize: 30,
+    color: 'white',
+    fontFamily: 'FuturaNewBold',
+    padding: 25,
   },
 
   nameDark: {
-    fontSize: 40,
+    fontSize: 30,
     color: 'white',
     fontFamily: 'FuturaNewBold',
     textAlign: 'center',
@@ -283,8 +390,8 @@ const style = StyleSheet.create({
   },
 
   nameLight: {
-    fontSize: 40,
-    color: 'black',
+    fontSize: 30,
+    color: 'white',
     fontFamily: 'FuturaNewBold',
     textAlign: 'center',
     padding: 5,
@@ -292,8 +399,8 @@ const style = StyleSheet.create({
 
   phone_numberDark: {
     fontSize: 30,
-    color: 'white',
-    fontFamily: 'FuturaNewBook',
+    color: 'black',
+    fontFamily: 'FuturaNewDemi',
     textAlign: 'center',
     padding: 5,
   },
@@ -301,13 +408,13 @@ const style = StyleSheet.create({
   phone_numberLight: {
     fontSize: 30,
     color: 'black',
-    fontFamily: 'FuturaNewBook',
+    fontFamily: 'FuturaNewDemi',
     textAlign: 'center',
     padding: 5,
   },
 
   emailDark: {
-    color: 'white',
+    color: 'black',
     textAlign: 'center',
     fontFamily: 'FuturaNewBook',
     fontSize: 18,
@@ -505,12 +612,13 @@ const style = StyleSheet.create({
   },
 
   profile: {
-    marginTop: 100,
-    width: 150,
-    height: 150,
+    alignSelf: 'center',
+    marginTop: 50,
     borderRadius: 100,
-    borderWidth: 1,
-    borderColor: 'white',
+    height: 120,
+    width: 120,
+    borderWidth: 2,
+    borderColor: 'black',
     marginBottom: 30,
   },
   initialsDark: {
@@ -522,8 +630,8 @@ const style = StyleSheet.create({
     fontSize: 30,
     fontFamily: 'FuturaNewBold',
     borderRadius: 100,
-    color: 'white',
-    borderColor: 'white',
+    color: 'black',
+    borderColor: 'black',
     borderWidth: 2,
     marginTop: 100,
     marginBottom: 20,
@@ -543,6 +651,22 @@ const style = StyleSheet.create({
     borderWidth: 2,
     marginTop: 100,
     marginBottom: 20,
+  },
+
+  buttonText: {
+    fontFamily: 'FuturaNewBook',
+    padding: 10,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+
+  titleIcon: {
+    width: 25,
+    height: 25,
+  },
+
+  iconButtons: {
+    justifyContent: 'space-between',
   },
 });
 

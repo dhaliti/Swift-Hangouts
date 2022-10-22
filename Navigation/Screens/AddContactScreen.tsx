@@ -289,8 +289,8 @@ const style = StyleSheet.create({
   },
 
   inputDark: {
-    color: 'white',
-    backgroundColor: '#202122',
+    color: 'black',
+    backgroundColor: 'lightgrey',
     marginBottom: 5,
     height: 50,
     fontFamily: 'FuturaNewMedium',

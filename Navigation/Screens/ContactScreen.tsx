@@ -16,9 +16,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import {Translate} from '../../translation/translate';
-import { AppBar, HStack, Icon, IconButton } from "@react-native-material/core";
-
-
+import {AppBar, HStack, Icon, IconButton} from '@react-native-material/core';
 
 const db = SQLite.openDatabase(
   {
@@ -195,16 +193,15 @@ const ContactScreen = ({navigation, route}) => {
     });
   }
 
-  const goToSettings = () => navigation.navigate('Settings', {theme: theme, language: language});
+  const goToSettings = () =>
+    navigation.navigate('Settings', {theme: theme, language: language});
 
-  const addContact = () => navigation.navigate('AddContactScreen', {theme: theme, language: language});
+  const addContact = () =>
+    navigation.navigate('AddContactScreen', {theme: theme, language: language});
 
   return (
     <View style={theme == 'light' ? style.generalLight : style.generalDark}>
-      <View
-        style={
-          theme == 'dark' ? style.headerDark : style.headerLight
-        }>
+      <View style={theme == 'dark' ? style.headerDark : style.headerLight}>
         <Text style={theme == 'light' ? style.titleLight : style.titleDark}>
           Contacts
         </Text>
@@ -219,21 +216,10 @@ const ContactScreen = ({navigation, route}) => {
               height: 27,
               marginRight: 30,
             }}
-            source={
-                require('../../images/settings.png')
-            }
+            source={require('../../images/settings.png')}
           />
         </TouchableOpacity>
       </View>
-{/*      <AppBar
-        title="Screen title"
-        trailing={props => (
-          <IconButton
-            icon={props => <Image source={require('../../images/settingsDark.png')} />}
-            {...props}
-          />
-        )}
-      />*/}
       <FlatList
         data={contacts}
         renderItem={({item}) => (
@@ -241,7 +227,12 @@ const ContactScreen = ({navigation, route}) => {
             style={
               theme == 'light' ? style.listElementLight : style.listElementDark
             }
-            onPress={() => navigation.navigate('ContactDetails', item)}>
+            onPress={() =>
+              navigation.navigate(
+                'ContactDetails',
+                Object.assign(item, {theme: theme, language: language}),
+              )
+            }>
             <View
               style={{
                 display: 'flex',
@@ -251,7 +242,11 @@ const ContactScreen = ({navigation, route}) => {
                 style={
                   theme == 'light' ? style.initialsLight : style.initialsDark
                 }
-                source={item.student == true ? require('../../images/42profile.png') : require('../../images/default_profile.png')}
+                source={
+                  item.student == 0
+                    ? require('../../images/42profile.png')
+                    : require('../../images/default_profile.png')
+                }
               />
               <Text
                 style={
@@ -268,7 +263,7 @@ const ContactScreen = ({navigation, route}) => {
       <Pressable style={style.addButton} onPress={addContact}>
         <Text style={style.plusSign}>+</Text>
       </Pressable>
-      <Button title={"Drop Table"} onPress={dropTable}/>
+      <Button title={'Drop Table'} onPress={dropTable} />
     </View>
   );
 };
@@ -350,7 +345,7 @@ const style = StyleSheet.create({
     color: 'black',
     textAlignVertical: 'auto',
     padding: 5,
-   fontFamily: 'FuturaNewMedium',
+    fontFamily: 'FuturaNewMedium',
     fontSize: 18,
   },
 
