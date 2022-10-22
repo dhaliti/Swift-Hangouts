@@ -90,89 +90,89 @@ const ContactDetailsScreen = ({navigation, route}) => {
     }
   };
 
-  const EmailButton = () => {
-    if (email) {
-      return (
-        <Pressable
-          onPress={sendEmail}
-          style={
-            theme == 'dark' ? style.EmailButtonDark : style.EmailButtonLight
-          }>
-          <Text
-            style={
-              theme == 'dark'
-                ? style.EmailButtonTextDark
-                : style.EmailButtonTextLight
-            }>
-            {language == 'en'
-              ? Translate.en.Contacts.emailButton
-              : Translate.fr.Contacts.emailButton}
-          </Text>
-        </Pressable>
-      );
-    }
-  };
+  // const EmailButton = () => {
+  //   if (email) {
+  //     return (
+  //       <Pressable
+  //         onPress={sendEmail}
+  //         style={
+  //           theme == 'dark' ? style.EmailButtonDark : style.EmailButtonLight
+  //         }>
+  //         <Text
+  //           style={
+  //             theme == 'dark'
+  //               ? style.EmailButtonTextDark
+  //               : style.EmailButtonTextLight
+  //           }>
+  //           {language == 'en'
+  //             ? Translate.en.Contacts.emailButton
+  //             : Translate.fr.Contacts.emailButton}
+  //         </Text>
+  //       </Pressable>
+  //     );
+  //   }
+  // };
 
-  const SMSButton = () => {
-    return (
-      <Pressable
-        onPress={sendMessage}
-        style={theme == 'dark' ? style.SMSButtonDark : style.SMSButtonLight}>
-        <Text
-          style={
-            theme == 'dark' ? style.SMSButtonTextDark : style.SMSButtonTextLight
-          }>
-          {language == 'en'
-            ? Translate.en.Contacts.SMSButton
-            : Translate.fr.Contacts.SMSButton}
-        </Text>
-      </Pressable>
-    );
-  };
-
-  const CallButton = () => {
-    return (
-      <Pressable
-        onPress={call}
-        style={theme == 'dark' ? style.callButtonDark : style.callButtonLight}>
-        <Text
-          style={
-            theme == 'dark'
-              ? style.callButtonTextDark
-              : style.callButtonTextLight
-          }>
-          {language == 'en'
-            ? Translate.en.Contacts.callButton
-            : Translate.fr.Contacts.callButton}
-        </Text>
-      </Pressable>
-    );
-  };
+  // const SMSButton = () => {
+  //   return (
+  //     <Pressable
+  //       onPress={sendMessage}
+  //       style={theme == 'dark' ? style.SMSButtonDark : style.SMSButtonLight}>
+  //       <Text
+  //         style={
+  //           theme == 'dark' ? style.SMSButtonTextDark : style.SMSButtonTextLight
+  //         }>
+  //         {language == 'en'
+  //           ? Translate.en.Contacts.SMSButton
+  //           : Translate.fr.Contacts.SMSButton}
+  //       </Text>
+  //     </Pressable>
+  //   );
+  // };
+  //
+  // const CallButton = () => {
+  //   return (
+  //     <Pressable
+  //       onPress={call}
+  //       style={theme == 'dark' ? style.callButtonDark : style.callButtonLight}>
+  //       <Text
+  //         style={
+  //           theme == 'dark'
+  //             ? style.callButtonTextDark
+  //             : style.callButtonTextLight
+  //         }>
+  //         {language == 'en'
+  //           ? Translate.en.Contacts.callButton
+  //           : Translate.fr.Contacts.callButton}
+  //       </Text>
+  //     </Pressable>
+  //   );
+  // };
 
   function sendEmail() {
     Linking.openURL('mailto:' + email);
   }
 
-  async function requestContactsPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-        {
-          title: 'Contacts permissions',
-          message: 'This application needs to get access to your contacts',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the contacts');
-      } else {
-        console.log('Contacts permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  }
+  // async function requestContactsPermission() {
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+  //       {
+  //         title: 'Contacts permissions',
+  //         message: 'This application needs to get access to your contacts',
+  //         buttonNegative: 'Cancel',
+  //         buttonPositive: 'OK',
+  //       },
+  //     );
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       console.log('You can use the contacts');
+  //     } else {
+  //       console.log('Contacts permission denied');
+  //     }
+  //   } catch (err) {
+  //     console.warn(err);
+  //   }
+  // }
 
   function remove() {
     Alert.alert(alertConfirmationTitle, alertConfirmationText, [
