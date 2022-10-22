@@ -186,10 +186,10 @@ const ContactScreen = ({navigation, route}) => {
   async function createTable() {
     await db.transaction(async tx => {
       await tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30),  email VARCHAR(30), student BOOL);',
+        'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30),  email VARCHAR(30), student INTEGER);',
         [],
         (tx, result) => {
-          console.log('Create Contact');
+          console.log('Create Contact ' + result);
         },
       );
     });
@@ -247,18 +247,11 @@ const ContactScreen = ({navigation, route}) => {
                 display: 'flex',
                 flexDirection: 'row',
               }}>
-{/*              <Text
-                style={
-                  theme == 'light' ? style.initialsLight : style.initialsDark
-                }>
-                {item.name.charAt(0).toUpperCase()}{' '}
-                {item.surname.charAt(0).toUpperCase()}
-              </Text>*/}
               <Image
                 style={
                   theme == 'light' ? style.initialsLight : style.initialsDark
                 }
-                source={require('../../images/default_profile.png')}
+                source={item.student == true ? require('../../images/42profile.png') : require('../../images/default_profile.png')}
               />
               <Text
                 style={

@@ -48,7 +48,7 @@ const AddContactScreen = ({navigation, route}) => {
   const [theme, setTheme] = useState(route.params.theme);
   const [language, setLanguage] = useState(route.params.language);
   const [checked, setChecked] = React.useState(false);
-  const [student, setStudent] = useState(false);
+  const [student, setStudent] = useState(0);
 
   let contacts: any = [];
 
@@ -117,7 +117,11 @@ const AddContactScreen = ({navigation, route}) => {
 
   const toggleSwitch = () => {
     setChecked(!checked);
-    setStudent(!student);
+    if (checked) {
+      setStudent(1);
+    } else {
+      setStudent(0);
+    }
   };
 
   async function addContact() {
@@ -134,7 +138,7 @@ const AddContactScreen = ({navigation, route}) => {
     } else {
       await db.transaction(async tx => {
         tx.executeSql(
-          'INSERT INTO Contact (name, surname, phone_number, email ) VALUES ("' +
+          'INSERT INTO Contact (name, surname, phone_number, email, student ) VALUES ("' +
             name +
             '", "' +
             surname +
@@ -142,9 +146,9 @@ const AddContactScreen = ({navigation, route}) => {
             phonenumber +
             '", "' +
             email +
-            '", "' +
-            student +
-            '")',
+            '", ' +
+            1 +
+            ');',
           [],
           (tx, result) => {
             console.log('New contact ' + result);
@@ -226,7 +230,7 @@ const AddContactScreen = ({navigation, route}) => {
         </Text>
         <Switch
           trackColor={{false: '#767577', true: '#81b0ff'}}
-          thumbColor={checked ? '#f5dd4b' : '#f4f3f4'}
+          thumbColor={student ? '#f5dd4b' : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
           value={checked}

@@ -215,6 +215,7 @@ const ContactDetailsScreen = ({navigation, route}) => {
       <Text style={theme == 'dark' ? style.initialsDark : style.initialsLight}>
         {name.charAt(0)} {surname.charAt(0)}
       </Text>
+      <Text style={{color:'black'}}>{route.params.student}</Text>
       <Text style={theme == 'dark' ? style.nameDark : style.nameLight}>
         {name} {surname}
       </Text>
