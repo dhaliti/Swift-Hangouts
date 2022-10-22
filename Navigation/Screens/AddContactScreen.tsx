@@ -7,12 +7,15 @@ import {
   Text,
   TextInput,
   View,
+  Image,
+  Switch,
 } from 'react-native';
 
 import SQLite, {openDatabase} from 'react-native-sqlite-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {Translate} from '../../translation/translate';
 import Contacts from 'react-native-contacts';
+import {Checkbox} from 'react-native-paper';
 
 const db = SQLite.openDatabase(
   {
@@ -44,14 +47,15 @@ const AddContactScreen = ({navigation, route}) => {
   const [email, setEmail] = useState('');
   const [theme, setTheme] = useState(route.params.theme);
   const [language, setLanguage] = useState(route.params.language);
-  const [flag, setFlag] = useState(true);
+  const [checked, setChecked] = React.useState(false);
+  const [student, setStudent] = useState(false);
 
   let contacts: any = [];
 
   useFocusEffect(
     React.useCallback(() => {
       // getPref();
-       setItems();
+      setItems();
       // getData();
       return () => console.log('ContactDetailsScreen');
     }, [getPref, setItems, getData]),
@@ -111,6 +115,11 @@ const AddContactScreen = ({navigation, route}) => {
     return 0;
   }
 
+  const toggleSwitch = () => {
+    setChecked(!checked);
+    setStudent(!student);
+  };
+
   async function addContact() {
     if (phonenumber == '') {
       Alert.alert(incompleteForm, missingPhone);
@@ -133,6 +142,8 @@ const AddContactScreen = ({navigation, route}) => {
             phonenumber +
             '", "' +
             email +
+            '", "' +
+            student +
             '")',
           [],
           (tx, result) => {
@@ -198,6 +209,29 @@ const AddContactScreen = ({navigation, route}) => {
         defaultValue={email}
         onChangeText={newName => setEmail(newName)}
       />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            fontFamily: 'FuturaNewMedium',
+            color: 'grey',
+            fontSize: 18,
+          }}>
+          42 student
+        </Text>
+        <Switch
+          trackColor={{false: '#767577', true: '#81b0ff'}}
+          thumbColor={checked ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={checked}
+        />
+      </View>
       <Pressable style={style.addButton} onPress={addContact}>
         <Text style={style.textButton}>{addButton}</Text>
       </Pressable>

@@ -186,7 +186,7 @@ const ContactScreen = ({navigation, route}) => {
   async function createTable() {
     await db.transaction(async tx => {
       await tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30),  email VARCHAR(30));',
+        'CREATE TABLE IF NOT EXISTS Contact (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(30), surname VARCHAR(30), phone_number VARCHAR(30),  email VARCHAR(30), student BOOL);',
         [],
         (tx, result) => {
           console.log('Create Contact');
