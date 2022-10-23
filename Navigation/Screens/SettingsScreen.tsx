@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Switch, Pressable, Alert} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 import {Translate} from '../../translation/translate';
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 const db = SQLite.openDatabase(
   {
@@ -18,7 +18,6 @@ const db = SQLite.openDatabase(
 const SettingsScreen = ({navigation, route}) => {
   const [theme, setTheme] = useState(route.params.theme);
   const [language, setLanguage] = useState(route.params.language);
-  const [lightThemeOn, setLightThemeOn] = useState(false);
   const [switchStatementLanguage, setSwitchStatementLanguage] = useState('');
   const [switchStatementTheme, setSwitchStatementTheme] = useState('');
   useState('');
@@ -29,12 +28,12 @@ const SettingsScreen = ({navigation, route}) => {
 
   useEffect(() => {
     return () => {
-    //  getPref();
+      //  getPref();
       setItems();
       setThemeLang();
       console.log('Settings');
     };
-  }, );
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,7 +43,6 @@ const SettingsScreen = ({navigation, route}) => {
       return () => console.log('Settings');
     }, [getPref, setItems, setThemeLang]),
   );
-
 
   const setItems = () => {
     if (language == 'en') {
@@ -93,27 +91,25 @@ const SettingsScreen = ({navigation, route}) => {
 
   async function changeTheme() {
     setTheme('light');
-   // setItems();
+    // setItems();
     setThemeLang();
     if (theme == 'dark') {
       await db.transaction(async tx => {
         tx.executeSql(
           'UPDATE Preferences SET theme="light";',
           [],
-          (tx, result) => {
-          },
+          (tx, result) => {},
         );
       });
     } else {
       await db.transaction(async tx => {
         setTheme('dark');
-     //   setItems();
+        //   setItems();
         setThemeLang();
         tx.executeSql(
           'UPDATE Preferences SET theme="dark";',
           [],
-          (tx, result) => {
-          },
+          (tx, result) => {},
         );
       });
     }
@@ -124,24 +120,25 @@ const SettingsScreen = ({navigation, route}) => {
     setItems();
     setThemeLang();
     if (language == 'en') {
+      setLanguage('fr');
+      setItems();
+      setThemeLang();
       await db.transaction(async tx => {
         tx.executeSql(
           'UPDATE Preferences SET language="fr";',
           [],
-          (tx, result) => {
-          },
+          (tx, result) => {},
         );
       });
     } else {
+      setLanguage('en');
+      setItems();
+      setThemeLang();
       await db.transaction(async tx => {
-        setLanguage('en');
-        setItems();
-        setThemeLang();
         tx.executeSql(
           'UPDATE Preferences SET language="en";',
           [],
-          (tx, result) => {
-          },
+          (tx, result) => {},
         );
       });
     }
@@ -150,46 +147,43 @@ const SettingsScreen = ({navigation, route}) => {
   return (
     <View style={theme == 'dark' ? style.generalDark : style.generalLight}>
       <View style={theme == 'dark' ? style.headerDark : style.headerLight}>
-      <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
-        {title}
-      </Text>
-    </View>
-        <Pressable
-          style={
-            theme == 'dark'
-              ? style.changeLanguageDark
-              : style.changeLanguageLight
-          }
-          onPress={changeLanguage}>
-          <Text
-            style={{
-              color: 'white',
-              fontFamily: 'FuturaNewMedium',
-              fontSize: 16,
-              textAlign: 'center',
-            }}>
-            {switchStatementLanguage}
-          </Text>
-        </Pressable>
+        <Text style={theme == 'dark' ? style.titleDark : style.titleLight}>
+          {title}
+        </Text>
+      </View>
+      <Pressable
+        style={
+          theme == 'dark' ? style.changeLanguageDark : style.changeLanguageLight
+        }
+        onPress={changeLanguage}>
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'FuturaNewMedium',
+            fontSize: 16,
+            textAlign: 'center',
+          }}>
+          {switchStatementLanguage}
+        </Text>
+      </Pressable>
 
-
-        <Pressable
-          style={
-            theme == 'dark' ? style.changeThemeDark : style.changeThemeLight
-          }
-          onPress={changeTheme}>
-          <Text
-            style={{
-              color: 'white',
-              fontFamily: 'FuturaNewMedium',
-              fontSize: 16,
-              textAlign: 'center',
-            }}>
-            {switchStatementTheme}
-          </Text>
-        </Pressable>
-      <View style={{marginTop: 70,}}>
-        <Text style={style.creditsTitle}>{language == 'en' ? "Credits" : "Crédits"}</Text>
+      <Pressable
+        style={theme == 'dark' ? style.changeThemeDark : style.changeThemeLight}
+        onPress={changeTheme}>
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'FuturaNewMedium',
+            fontSize: 16,
+            textAlign: 'center',
+          }}>
+          {switchStatementTheme}
+        </Text>
+      </Pressable>
+      <View style={{marginTop: 70}}>
+        <Text style={style.creditsTitle}>
+          {language == 'en' ? 'Credits' : 'Crédits'}
+        </Text>
         <Text style={style.credits}>
           {language == 'en' ? Translate.en.Credits : Translate.fr.Credits}
         </Text>
@@ -245,7 +239,6 @@ const style = StyleSheet.create({
     padding: 25,
   },
 
-
   sectionDark: {
     color: 'white',
     fontSize: 16,
@@ -289,7 +282,6 @@ const style = StyleSheet.create({
     marginRight: 90,
     marginLeft: 90,
     marginBottom: 10,
-
   },
 
   changeLanguageLight: {
@@ -319,7 +311,7 @@ const style = StyleSheet.create({
     marginBottom: 10,
   },
 
-  creditsTitle:{
+  creditsTitle: {
     fontFamily: 'FuturaNewBold',
     textAlign: 'center',
     textTransform: 'uppercase',
@@ -329,9 +321,8 @@ const style = StyleSheet.create({
   },
   credits: {
     marginLeft: 40,
-    marginRight : 40,
-    textAlign:'center',
+    marginRight: 40,
+    textAlign: 'center',
     color: 'grey',
-
   },
 });

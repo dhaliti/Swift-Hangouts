@@ -14,7 +14,7 @@ import {
 import SQLite, {openDatabase} from 'react-native-sqlite-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {Translate} from '../../translation/translate';
-import Contacts from 'react-native-contacts';
+import Contacts, { Contact } from "react-native-contacts";
 import {Checkbox} from 'react-native-paper';
 
 const db = SQLite.openDatabase(
@@ -54,9 +54,7 @@ const AddContactScreen = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // getPref();
       setItems();
-      // getData();
       return () => console.log('ContactDetailsScreen');
     }, [getPref, setItems, getData]),
   );
@@ -147,7 +145,7 @@ const AddContactScreen = ({navigation, route}) => {
             '", "' +
             email +
             '", ' +
-            1 +
+            student +
             ');',
           [],
           (tx, result) => {
@@ -155,7 +153,6 @@ const AddContactScreen = ({navigation, route}) => {
           },
         );
       });
-      Alert.alert(title, addedSuccessfully);
       const newPerson = {
         emailAddresses: [
           {
@@ -173,7 +170,8 @@ const AddContactScreen = ({navigation, route}) => {
         givenName: name,
       };
       await Contacts.addContact(newPerson as Contact);
-      navigation.goBack();
+      Alert.alert(title, addedSuccessfully);
+      navigation.navigate('Contacts');
     }
   }
 
@@ -293,7 +291,7 @@ const style = StyleSheet.create({
     backgroundColor: 'lightgrey',
     marginBottom: 5,
     height: 50,
-    fontFamily: 'FuturaNewMedium',
+    fontFamily: 'FuturaNewBook',
     fontSize: 18,
     marginLeft: 40,
     marginRight: 40,
@@ -306,7 +304,7 @@ const style = StyleSheet.create({
     backgroundColor: 'lightgrey',
     marginBottom: 5,
     height: 50,
-    fontFamily: 'FuturaNewMedium',
+    fontFamily: 'FuturaNewBook',
     fontSize: 18,
     marginLeft: 35,
     marginRight: 35,

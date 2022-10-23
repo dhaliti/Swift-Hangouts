@@ -31,8 +31,8 @@ const db = SQLite.openDatabase(
 
 const ContactScreen = ({navigation, route}) => {
   const [contacts, setContacts] = useState([]);
-  const [language, setLanguage] = useState('');
-  const [theme, setTheme] = useState('dark');
+  const [language, setLanguage] = useState(route.params ? route.params.language : 'en');
+  const [theme, setTheme] = useState(route.params ? route.params.theme : 'dark');
   const isFocused = useIsFocused();
   const [seconds, setSeconds] = useState(0);
   const appState = useRef(AppState.currentState);
@@ -55,16 +55,20 @@ const ContactScreen = ({navigation, route}) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log('callback');
-      requestContactsPermission();
-      getData();
-      createTable();
-      createPref();
-      getPref();
+      requestContactsPermissionWrite().then(() => {
+        requestContactsPermissionRead().then(() => {
+          getData();
+          createTable();
+          createPref();
+          getPref();
+        });
+      });
       return () => console.log('Contacts');
     }, [isFocused]),
   );
 
   useEffect(() => {
+    getPref();
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match('active') && nextAppState === 'background') {
         console.log('start');
@@ -74,7 +78,8 @@ const ContactScreen = ({navigation, route}) => {
         appState.current.match('background') &&
         nextAppState === 'active'
       ) {
-        endTimer(getPref);
+        getPref();
+        endTimer();
       }
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
@@ -85,9 +90,10 @@ const ContactScreen = ({navigation, route}) => {
     };
   }, [isFocused]);
 
-  const stopTimer = () => {
+  async function stopTimer() {
     BackgroundTimer.stopBackgroundTimer();
     BackgroundTimer.clearInterval(startTimer);
+    await getPref();
   };
 
   async function endTimer() {
@@ -96,25 +102,45 @@ const ContactScreen = ({navigation, route}) => {
 
   async function resetTimer() {
     console.log('stop');
-    stopTimer();
+    await stopTimer();
     language == 'en'
       ? Alert.alert(Translate.en.Timer + newSeconds + ' seconds')
       : Alert.alert(Translate.fr.Timer + newSeconds + ' secondes');
     newSeconds = 0;
   }
 
-  function startCount() {
+   function startCount() {
     startTimer = BackgroundTimer.runBackgroundTimer(() => {
       console.log(newSeconds);
-      getPref();
       newSeconds++;
     }, 1000);
   }
 
-  async function requestContactsPermission() {
+  async function requestContactsPermissionWrite() {
     try {
       const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
+        {
+          title: 'Contacts permissions',
+          message: 'This application needs to get access to your contacts',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the contacts');
+      } else {
+        console.log('Contacts permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async function requestContactsPermissionRead() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
         {
           title: 'Contacts permissions',
           message: 'This application needs to get access to your contacts',
@@ -337,7 +363,7 @@ const style = StyleSheet.create({
     color: 'black',
     textAlignVertical: 'auto',
     padding: 5,
-    fontFamily: 'FuturaNewMedium',
+    fontFamily: 'FuturaNewBook',
     fontSize: 18,
   },
 
