@@ -90,27 +90,17 @@ const SettingsScreen = ({navigation, route}) => {
   }
 
   async function changeTheme() {
-    setTheme('light');
-    // setItems();
-    setThemeLang();
     if (theme == 'dark') {
+      setTheme('light');
+      setThemeLang();
       await db.transaction(async tx => {
-        tx.executeSql(
-          'UPDATE Preferences SET theme="light";',
-          [],
-          (tx, result) => {},
-        );
+        tx.executeSql('UPDATE Preferences SET theme="light";', [], () => {});
       });
     } else {
       await db.transaction(async tx => {
         setTheme('dark');
-        //   setItems();
         setThemeLang();
-        tx.executeSql(
-          'UPDATE Preferences SET theme="dark";',
-          [],
-          (tx, result) => {},
-        );
+        tx.executeSql('UPDATE Preferences SET theme="dark";', [], () => {});
       });
     }
   }
@@ -124,11 +114,7 @@ const SettingsScreen = ({navigation, route}) => {
       setItems();
       setThemeLang();
       await db.transaction(async tx => {
-        tx.executeSql(
-          'UPDATE Preferences SET language="fr";',
-          [],
-          (tx, result) => {},
-        );
+        tx.executeSql('UPDATE Preferences SET language="fr";', [], () => {});
       });
     } else {
       setLanguage('en');
@@ -153,13 +139,13 @@ const SettingsScreen = ({navigation, route}) => {
       </View>
       <Pressable
         style={
-          theme == 'dark' ? style.changeLanguageDark : style.changeLanguageLight
+          language == 'en' ? style.changeLanguageFr : style.changeLanguageEn
         }
         onPress={changeLanguage}>
         <Text
           style={{
             color: 'white',
-            fontFamily: 'FuturaNewMedium',
+            fontFamily: 'FuturaNewBold',
             fontSize: 16,
             textAlign: 'center',
           }}>
@@ -171,12 +157,21 @@ const SettingsScreen = ({navigation, route}) => {
         style={theme == 'dark' ? style.changeThemeDark : style.changeThemeLight}
         onPress={changeTheme}>
         <Text
-          style={{
-            color: 'white',
-            fontFamily: 'FuturaNewMedium',
-            fontSize: 16,
-            textAlign: 'center',
-          }}>
+          style={
+            theme == 'dark'
+              ? {
+                  color: 'black',
+                  fontFamily: 'FuturaNewBold',
+                  fontSize: 16,
+                  textAlign: 'center',
+                }
+              : {
+                  color: 'white',
+                  fontFamily: 'FuturaNewBold',
+                  fontSize: 16,
+                  textAlign: 'center',
+                }
+          }>
           {switchStatementTheme}
         </Text>
       </Pressable>
@@ -275,8 +270,8 @@ const style = StyleSheet.create({
     color: 'black',
   },
 
-  changeLanguageDark: {
-    backgroundColor: '#00babc',
+  changeLanguageEn: {
+    backgroundColor: '#6D9DCA',
     padding: 15,
     borderRadius: 4,
     marginRight: 90,
@@ -284,8 +279,8 @@ const style = StyleSheet.create({
     marginBottom: 10,
   },
 
-  changeLanguageLight: {
-    backgroundColor: '#00babc',
+  changeLanguageFr: {
+    backgroundColor: '#D67772',
     padding: 15,
     borderRadius: 4,
     marginRight: 90,
@@ -294,7 +289,9 @@ const style = StyleSheet.create({
   },
 
   changeThemeDark: {
-    backgroundColor: '#00babc',
+    backgroundColor: 'whitesmoke',
+    borderWidth: 1,
+    borderColor: 'lightgrey',
     padding: 15,
     borderRadius: 4,
     marginRight: 90,
@@ -303,7 +300,7 @@ const style = StyleSheet.create({
   },
 
   changeThemeLight: {
-    backgroundColor: '#00babc',
+    backgroundColor: '#1A1919',
     padding: 15,
     borderRadius: 4,
     marginRight: 90,

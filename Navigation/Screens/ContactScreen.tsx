@@ -16,7 +16,6 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import {Translate} from '../../translation/translate';
-import {AppBar, HStack, Icon, IconButton} from '@react-native-material/core';
 
 const db = SQLite.openDatabase(
   {
@@ -31,8 +30,12 @@ const db = SQLite.openDatabase(
 
 const ContactScreen = ({navigation, route}) => {
   const [contacts, setContacts] = useState([]);
-  const [language, setLanguage] = useState(route.params ? route.params.language : 'en');
-  const [theme, setTheme] = useState(route.params ? route.params.theme : 'dark');
+  const [language, setLanguage] = useState(
+    route.params ? route.params.language : 'en',
+  );
+  const [theme, setTheme] = useState(
+    route.params ? route.params.theme : 'dark',
+  );
   const isFocused = useIsFocused();
   const [seconds, setSeconds] = useState(0);
   const appState = useRef(AppState.currentState);
@@ -94,7 +97,7 @@ const ContactScreen = ({navigation, route}) => {
     BackgroundTimer.stopBackgroundTimer();
     BackgroundTimer.clearInterval(startTimer);
     await getPref();
-  };
+  }
 
   async function endTimer() {
     await resetTimer();
@@ -103,13 +106,11 @@ const ContactScreen = ({navigation, route}) => {
   async function resetTimer() {
     console.log('stop');
     await stopTimer();
-    language == 'en'
-      ? Alert.alert(Translate.en.Timer + newSeconds + ' seconds')
-      : Alert.alert(Translate.fr.Timer + newSeconds + ' secondes');
+    Alert.alert('Toast', newSeconds + ' seconds');
     newSeconds = 0;
   }
 
-   function startCount() {
+  function startCount() {
     startTimer = BackgroundTimer.runBackgroundTimer(() => {
       console.log(newSeconds);
       newSeconds++;

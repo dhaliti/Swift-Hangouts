@@ -68,8 +68,8 @@ export const Translate = {
       languageTitle: 'Langue',
       themeTitle: 'Thème',
       switchStatementLanguage: 'Switch to English',
-      switchStatementThemeDark: 'Passer au Mode clair',
-      switchStatementThemeLight: 'Passer au Mode sombre',
+      switchStatementThemeDark: 'Mode clair',
+      switchStatementThemeLight: 'Mode sombre',
     },
     EditContact: {
       title: 'Modifier contact',
