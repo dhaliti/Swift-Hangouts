@@ -15,7 +15,6 @@ import SQLite from 'react-native-sqlite-storage';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
-import {Translate} from '../../translation/translate';
 
 const db = SQLite.openDatabase(
   {
@@ -44,16 +43,6 @@ const ContactScreen = ({navigation, route}) => {
   let init: any = [];
   let startTimer: any;
   let newSeconds = 0;
-
-  // useEffect(() => {
-  //   return () => {
-  //     requestContactsPermission();
-  //     createTable();
-  //     createPref();
-  //     getPref();
-  //     getData();
-  //   };
-  // }, [isFocused]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -118,24 +107,10 @@ const ContactScreen = ({navigation, route}) => {
   }
 
   async function requestContactsPermissionWrite() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
-        {
-          title: 'Contacts permissions',
-          message: 'This application needs to get access to your contacts',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the contacts');
-      } else {
-        console.log('Contacts permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
+      PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+    ]);
   }
 
   async function requestContactsPermissionRead() {

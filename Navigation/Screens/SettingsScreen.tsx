@@ -271,7 +271,7 @@ const style = StyleSheet.create({
   },
 
   changeLanguageEn: {
-    backgroundColor: '#6D9DCA',
+    backgroundColor: '#04809F',
     padding: 15,
     borderRadius: 4,
     marginRight: 90,
@@ -300,7 +300,7 @@ const style = StyleSheet.create({
   },
 
   changeThemeLight: {
-    backgroundColor: '#1A1919',
+    backgroundColor: '#323232',
     padding: 15,
     borderRadius: 4,
     marginRight: 90,
