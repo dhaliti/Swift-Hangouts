@@ -47,7 +47,7 @@ export const Translate = {
     },
     Timer: 'Your application remained in the background for: ',
     Credits:
-      'This app has been made as part of the School 42 curriculum.\nIt uses TypeScript and React Native to generate a cross-platform code base.',
+      'Made as part of the School 42 curriculum.\nTypeScript, React Native & SQLite.',
   },
 
   fr: {
@@ -98,5 +98,7 @@ export const Translate = {
       contactAlreadyExists: 'Un contact avec ce numéro de téléphone est déjà enregistré !'
     },
     Timer: "L'application est restée à l'arrière-plan pendant: ",
+    Credits:
+      "Projet réalisé dans le cadre du curses de l'école 42.\nTypeScript, React Native & SQLite" ,
   },
 };
