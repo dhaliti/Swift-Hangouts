@@ -5,8 +5,9 @@
 Hangouts is a light-weight contact app enableing you to add ans synchronize contacts directly from the 42 API.<br>
 Made for simplicity, it was built with React Native, TypeScript, SQLite and Material Design.<br>
 
-The app is available in two languages: English and French.
+The app is available in both English and French.
 <br>
+
 <img src="https://user-images.githubusercontent.com/105823790/210008129-ec005ed8-5941-48b2-a45f-2213d45cf0e6.svg" width=800>
 
 
